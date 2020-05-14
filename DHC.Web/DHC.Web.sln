@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DHC.Web.Client", "DHC.Web.C
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DHC.Web.HelloWorld", "DHC.Web.HelloWorld\DHC.Web.HelloWorld.njsproj", "{E43B102A-8AC1-4526-8827-262CF338FD4E}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DHC.Web.API", "DHC.Web.API\DHC.Web.API.njsproj", "{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +19,10 @@ Global
 		{E43B102A-8AC1-4526-8827-262CF338FD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E43B102A-8AC1-4526-8827-262CF338FD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E43B102A-8AC1-4526-8827-262CF338FD4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
