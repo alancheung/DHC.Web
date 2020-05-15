@@ -5,7 +5,7 @@ import express = require('express');
 const router = express.Router();
 
 router.get('/', (req: express.Request, res: express.Response) => {
-    res.sendFile(__dirname + '/' + 'index.html');
+    res.render('index', { title: 'DHC.Web' });
 });
 
 export default router;

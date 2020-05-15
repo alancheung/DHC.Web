@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const router = express.Router();
 router.get('/', (req, res) => {
-    res.sendFile(__dirname + '/' + 'index.html');
+    res.render('index', { title: 'DHC.Web' });
 });
 exports.default = router;
 //# sourceMappingURL=index.js.map

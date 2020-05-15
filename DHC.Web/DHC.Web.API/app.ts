@@ -9,10 +9,9 @@ const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'html');
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', routes);
 app.use('/users', users);
 
@@ -24,7 +23,6 @@ app.use((req, res, next) => {
 });
 
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
@@ -47,8 +45,8 @@ app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-
     });
 });
 
-app.set('port', process.env.PORT || 3000);
 
+app.set('port', process.env.PORT || 3000);
 const server = app.listen(app.get('port'), function () {
     debug('Express server listening on port ' + server.address().port);
 });
