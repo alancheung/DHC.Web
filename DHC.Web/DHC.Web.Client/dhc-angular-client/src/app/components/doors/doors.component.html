@@ -1,1 +1,11 @@
-<p>doors works!</p>
+<ng-container *ngIf="loading; else elseTemplate">
+    Loading...
+</ng-container>
+<ng-template #elseTemplate>
+    <div>
+        <span>{{latestRecord.name}} is currently: {{latestRecord.state ? 'Open!' : 'Closed!'}}</span>
+    </div>
+    <div *ngFor="let l of logs">
+        <span>{{l.name}} :: {{l.state}} :: {{l.eventtime}}</span>
+    </div>
+</ng-template>
