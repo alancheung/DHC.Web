@@ -23,9 +23,9 @@ export class DoorsComponent  implements OnInit, InformationLoader {
       let lastTime: Date;
       data.forEach(d => {
         d.datetime = new Date(d.eventtime);
-        if (!lastTime || (d.datetime >= lastTime && d.name == 'Office')){
+        if (!lastTime || (d.datetime >= lastTime && d.name == 'OfficeDoor')){
           this.latestRecord = d;
-          lastTime = d.eventtime;
+          lastTime = d.datetime;
         }
       }, err => {
         console.error(err);
