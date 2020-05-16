@@ -4,6 +4,7 @@ untracked.config
 APIKeysLocal.cs
 *.local
 *.local.*
+environment.prod.ts
 
 # Ignores TypeScript MapFiles, consider ignoring .js files?
 *.js.map
