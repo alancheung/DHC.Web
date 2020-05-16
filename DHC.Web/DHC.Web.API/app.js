@@ -1,17 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const debug = require("debug");
 const express = require("express");
 const path = require("path");
+const parser = require("body-parser");
 const index_1 = require("./routes/index");
-const user_1 = require("./routes/user");
+const log_1 = require("./routes/log");
+const database_1 = require("./SQLite/database");
 const app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+// define request helpers
+// THIS MUST HAPPEN BEFORE DEFINING ROUTES
+app.use(parser.urlencoded({ extended: false }));
+app.use(parser.json());
+// Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index_1.default);
-app.use('/users', user_1.default);
+app.use('/log', log_1.default);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
     const err = new Error('Not Found');
@@ -30,17 +36,22 @@ if (app.get('env') === 'development') {
         });
     });
 }
-// production error handler
-// no stacktraces leaked to user
-app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+else {
+    // production error handler
+    // no stacktraces leaked to user
+    app.use((err, req, res, next) => {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: {}
+        });
     });
-});
+}
+// initialize database
+let database = database_1.db;
+// start listening
 app.set('port', process.env.PORT || 3000);
 const server = app.listen(app.get('port'), function () {
-    debug('Express server listening on port ' + server.address().port);
+    console.log('Express server listening on port ' + server.address().port);
 });
 //# sourceMappingURL=app.js.map
