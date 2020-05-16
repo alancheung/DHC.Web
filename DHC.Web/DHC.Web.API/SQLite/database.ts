@@ -17,10 +17,23 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         console.log('Connected to the SQLite database.');
         db.run(AccessLog.createTable(), (err) => {
             if (!err) {
-                let seed: sqlCommand = new AccessLog('Office', false, new Date(new Date().setDate(new Date().getDate() - 1))).insert();
+                // Open  yesterday
+                let event: AccessLog;
+                let seed: sqlCommand;
+
+                event = new AccessLog();
+                event.name = 'Test';
+                event.state = true;
+                event.eventtime = new Date(new Date().setDate(new Date().getDate() - 1));
+                seed = event.insert();
                 db.run(seed.command, seed.parameters);
 
-                seed = new AccessLog('Office', true, new Date()).insert();
+                // Close today
+                event = new AccessLog();
+                event.name = 'Test';
+                event.state = false;
+                event.eventtime = new Date();
+                seed = event.insert();
                 db.run(seed.command, seed.parameters);
             }
         });

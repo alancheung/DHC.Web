@@ -3,15 +3,15 @@ import { sqlCommand } from "../sqlCommand";
 
 class AccessLog implements table {
     public id: number;
-    public portalName: string;
+    public name: string;
     public state: boolean;
     public eventtime: Date;
 
-    constructor (portal: string, open: boolean, eventtime: Date) {
-        this.portalName = portal;
-        this.state = open;
-        this.eventtime = eventtime;
-    }
+    //constructor (portal: string, open: boolean, eventtime: Date) {
+    //    this.portalName = portal;
+    //    this.state = open;
+    //    this.eventtime = eventtime;
+    //}
 
     static createTable(): string {
         let seed = `CREATE TABLE AccessLog (
@@ -24,7 +24,7 @@ class AccessLog implements table {
     }
 
     insert(): sqlCommand {
-        return new sqlCommand(`INSERT INTO AccessLog (name, state, eventtime) VALUES (?,?,?)`, [this.portalName, this.state, this.eventtime.toLocaleString()]);
+        return new sqlCommand(`INSERT INTO AccessLog (name, state, eventtime) VALUES (?,?,?)`, [this.name, this.state, this.eventtime.toLocaleString()]);
     }
 }
 

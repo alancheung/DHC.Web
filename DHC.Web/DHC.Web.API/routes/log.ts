@@ -26,13 +26,22 @@ function getRoot(req: Request, resp: Response): void {
 }
 
 function postRoot(req: Request, resp: Response): void {
-    let logEntry: AccessLog = req.body;
-    let insert: sqlCommand = logEntry.insert();
+    let logEntry: AccessLog;
+    if (req.body.name && req.body.state && req.body.eventtime) {
+        logEntry = req.body;
+    } else {
+        logEntry = new AccessLog();
+        logEntry.name = req.body.name;
+        logEntry.state = req.body.state;
+        logEntry.eventtime = req.body.eventtime || new Date();
+    }
 
+    let insert: sqlCommand = logEntry.insert();
     db.run(insert.command, insert.parameters, (err, data) => {
         if (err) {
-            resp.status(500);
+            resp.status(500).json(err);
         } else {
+            console.log(`Inserted new ${logEntry.state ? 'open' : 'close'} record for ${logEntry.name} at ${logEntry.eventtime.toLocaleString()}`);
             resp.status(200).json(data);
         }
     });
