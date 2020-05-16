@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const path = require("path");
 const parser = require("body-parser");
+const cors = require("cors");
 const index_1 = require("./routes/index");
 const log_1 = require("./routes/log");
 const database_1 = require("./SQLite/database");
@@ -14,6 +15,7 @@ app.set('view engine', 'pug');
 // THIS MUST HAPPEN BEFORE DEFINING ROUTES
 app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json());
+app.use(cors());
 // Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index_1.default);

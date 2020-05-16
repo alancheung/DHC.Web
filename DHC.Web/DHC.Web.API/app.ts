@@ -2,6 +2,7 @@ import debug = require('debug');
 import express = require('express');
 import path = require('path');
 import parser = require('body-parser');
+import cors = require('cors');
 
 import routes from './routes/index';
 import log from './routes/log';
@@ -18,6 +19,8 @@ app.set('view engine', 'pug');
 // THIS MUST HAPPEN BEFORE DEFINING ROUTES
 app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json());
+
+app.use(cors());
 
 // Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
