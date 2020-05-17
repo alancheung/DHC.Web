@@ -9,8 +9,6 @@ let md5 = require('md5');
 /** Filename of the database. */
 const DBSOURCE = "dhc.sqlite";
 
-let test = ApplicationSettings.Config.currentDatabaseVersion;
-
 /** Database definition */
 let db = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {
@@ -19,7 +17,7 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err;
     } else {
         console.log('Connected to the SQLite database.');
-        db.run(new AccessLog().createTable(), (err) => { if (!err) { console.log(`${AccessLog.name} seeded!`); } });
+        db.run(new AccessLog().createTable(), (err) => { if (!err) { console.log(`${AccessLog.name} finished seed!`); } });
         // db.run(new VersionHistory().createTable(), (err) => { if (!err) { console.log(`${VersionHistory.name} seeded!`); } });
 
         console.log('Database created!');

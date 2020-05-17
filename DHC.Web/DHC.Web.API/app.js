@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const appconfig_1 = require("./config/appconfig");
 const express = require("express");
 const app = express();
+// Set config as soon as possible so other modules can use them!
 if (app.get('env') === 'development') {
     appconfig_1.ApplicationSettings.Config = appconfig_1.GetConfig(false);
 }

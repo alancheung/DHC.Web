@@ -17,7 +17,13 @@ class VersionHistory {
      * @returns True if upgrade required, false otherwise.
      */
     static RequiresUpgrade(db, version) {
-        db.run(`SELECT * FROM ${VersionHistory.name} ORDER BY ${nameof_1.nameof('Version')}`);
+        db.all(`SELECT TOP(1) * FROM ${VersionHistory.name} WHERE Module = ${VersionHistoryModules.Database} ORDER BY ${nameof_1.nameof('Version')} DESC
+                UNION
+                SELECT TOP(1) * FROM ${VersionHistory.name} WHERE Module = ${VersionHistoryModules.Software} ORDER BY ${nameof_1.nameof('Version')} DESC`, (err, data) => {
+            if (err)
+                throw err;
+            let database;
+        });
         return false;
     }
     createTable() {
@@ -25,7 +31,8 @@ class VersionHistory {
             ${nameof_1.nameof("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof_1.nameof("Module")} TEXT,
             ${nameof_1.nameof("Version")} INTEGER,
-            ${nameof_1.nameof("Notes")} TEXT)`;
+            ${nameof_1.nameof("Notes")} TEXT,
+            ${nameof_1.nameof("BootTime")}`;
         return seed;
     }
     insert() {
