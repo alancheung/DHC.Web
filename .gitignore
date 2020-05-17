@@ -5,6 +5,7 @@ APIKeysLocal.cs
 *.local
 *.local.*
 environment.prod.ts
+*[Cc]onfig.prod.ts
 
 # Ignores TypeScript MapFiles, consider ignoring .js files?
 *.js.map
