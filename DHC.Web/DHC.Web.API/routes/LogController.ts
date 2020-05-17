@@ -14,14 +14,17 @@ const root: string = '/';
  * @param data
  */
 function parseDatabaseValues(error: any, data: AccessLog[]): AccessLog[] {
-    if (error) throw error;
+    if (error) console.log(error);
 
     // Convert string back to TS date
-    data.forEach(d => {
-        d.EventTime = new Date(d.EventTime);
-    });
-
-    return data;
+    if (data) {
+        data.forEach(d => {
+            d.EventTime = new Date(d.EventTime);
+        });
+        return data;
+    } else {
+        return new AccessLog[0];
+    }
 }
 
 
@@ -79,13 +82,11 @@ function postRoot(req: Request, resp: Response): void {
  * @param resp Express Response object.
  */
 function getLogsForName(req: Request, resp: Response): void {
-    let searchName = req.params.name;
+    let searchName = `%${req.params.name}%`;
 
-    let sqlCommand =`SELECT * FROM ${AccessLog.name} 
-        WHERE ${nameof<AccessLog>('Name')} LIKE '%?%' 
-        ORDER BY ${nameof<AccessLog>('EventTime')} DESC`;
+    let sqlCommand = `SELECT * FROM ${AccessLog.name} WHERE ${nameof<AccessLog>('Name')} LIKE ? ORDER BY ${nameof<AccessLog>('EventTime')} DESC`;
 
-    db.run(sqlCommand, searchName, (err, data: AccessLog[]) => {
+    db.all(sqlCommand, searchName, (err, data: AccessLog[]) => {
         data = parseDatabaseValues(err, data);
         resp.json(data);
     });

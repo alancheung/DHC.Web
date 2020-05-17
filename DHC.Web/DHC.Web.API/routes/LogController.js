@@ -13,12 +13,17 @@ const root = '/';
  */
 function parseDatabaseValues(error, data) {
     if (error)
-        throw error;
+        console.log(error);
     // Convert string back to TS date
-    data.forEach(d => {
-        d.EventTime = new Date(d.EventTime);
-    });
-    return data;
+    if (data) {
+        data.forEach(d => {
+            d.EventTime = new Date(d.EventTime);
+        });
+        return data;
+    }
+    else {
+        return new AccessLog_1.AccessLog[0];
+    }
 }
 // Register routes
 router.get(root, getRoot);
@@ -71,11 +76,9 @@ function postRoot(req, resp) {
  * @param resp Express Response object.
  */
 function getLogsForName(req, resp) {
-    let searchName = req.params.name;
-    let sqlCommand = `SELECT * FROM ${AccessLog_1.AccessLog.name} 
-        WHERE ${nameof_1.nameof('Name')} LIKE '%?%' 
-        ORDER BY ${nameof_1.nameof('EventTime')} DESC`;
-    database_1.db.run(sqlCommand, searchName, (err, data) => {
+    let searchName = `%${req.params.name}%`;
+    let sqlCommand = `SELECT * FROM ${AccessLog_1.AccessLog.name} WHERE ${nameof_1.nameof('Name')} LIKE ? ORDER BY ${nameof_1.nameof('EventTime')} DESC`;
+    database_1.db.all(sqlCommand, searchName, (err, data) => {
         data = parseDatabaseValues(err, data);
         resp.json(data);
     });
