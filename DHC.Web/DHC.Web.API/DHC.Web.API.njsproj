@@ -55,6 +55,9 @@
     <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="common\isbooleantrue.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="common\nameof.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

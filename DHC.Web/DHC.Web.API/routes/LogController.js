@@ -4,6 +4,7 @@ const express = require("express");
 const database_1 = require("../SQLite/database");
 const AccessLog_1 = require("../SQLite/tables/AccessLog");
 const nameof_1 = require("../common/nameof");
+const isbooleantrue_1 = require("../common/isbooleantrue");
 const router = express.Router();
 const root = '/';
 /**
@@ -18,6 +19,7 @@ function parseDatabaseValues(error, data) {
     if (data) {
         data.forEach(d => {
             d.EventTime = new Date(d.EventTime);
+            d.State = isbooleantrue_1.isbooleantrue(d.State);
         });
         return data;
     }
@@ -55,7 +57,7 @@ function postRoot(req, resp) {
     else {
         logEntry = new AccessLog_1.AccessLog();
         logEntry.Name = req.body.name;
-        logEntry.State = req.body.state;
+        logEntry.State = isbooleantrue_1.isbooleantrue(req.body.state);
         logEntry.EventTime = req.body.eventtime || new Date();
     }
     let insert = logEntry.insert();
