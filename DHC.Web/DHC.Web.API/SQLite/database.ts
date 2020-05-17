@@ -1,11 +1,15 @@
 import { AccessLog } from "./tables/AccessLog";
-import { sqlCommand } from "./sqlCommand";
+import { SqlCommand } from "./sqlCommand";
+import { VersionHistory } from "./tables/VersionHistory";
+import { ApplicationSettings } from "../config/appconfig";
 
 let sqlite3 = require('sqlite3').verbose();
 let md5 = require('md5');
 
 /** Filename of the database. */
 const DBSOURCE = "db.sqlite";
+
+let test = ApplicationSettings.Config.currentDatabaseVersion;
 
 /** Database definition */
 let db = new sqlite3.Database(DBSOURCE, (err) => {
@@ -15,28 +19,10 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err;
     } else {
         console.log('Connected to the SQLite database.');
-        db.run(AccessLog.createTable(), (err) => {
-            if (!err) {
-                // Open  yesterday
-                let event: AccessLog;
-                let seed: sqlCommand;
+        db.run(new AccessLog().createTable(), (err) => { if (!err) { console.log(`${AccessLog.name} seeded!`); } });
+        // db.run(new VersionHistory().createTable(), (err) => { if (!err) { console.log(`${VersionHistory.name} seeded!`); } });
 
-                event = new AccessLog();
-                event.name = 'Test';
-                event.state = true;
-                event.eventtime = new Date(new Date().setDate(new Date().getDate() - 1));
-                seed = event.insert();
-                db.run(seed.command, seed.parameters);
-
-                // Close today
-                event = new AccessLog();
-                event.name = 'Test';
-                event.state = false;
-                event.eventtime = new Date();
-                seed = event.insert();
-                db.run(seed.command, seed.parameters);
-            }
-        });
+        console.log('Database created!');
     }
 });
 

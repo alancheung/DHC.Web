@@ -2,22 +2,20 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessLog = void 0;
 const sqlCommand_1 = require("../sqlCommand");
+const nameof_1 = require("../../common/nameof");
 class AccessLog {
-    //constructor (portal: string, open: boolean, eventtime: Date) {
-    //    this.portalName = portal;
-    //    this.state = open;
-    //    this.eventtime = eventtime;
-    //}
-    static createTable() {
-        let seed = `CREATE TABLE AccessLog (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            state INTEGER,
-            eventtime TEXT)`;
+    createTable() {
+        let seed = `CREATE TABLE IF NOT EXISTS ${AccessLog.name} (
+            ${nameof_1.nameof("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${nameof_1.nameof("Name")} TEXT,
+            ${nameof_1.nameof("State")} INTEGER,
+            ${nameof_1.nameof("EventTime")} TEXT)`;
         return seed;
     }
     insert() {
-        return new sqlCommand_1.sqlCommand(`INSERT INTO AccessLog (name, state, eventtime) VALUES (?,?,?)`, [this.name, this.state, this.eventtime.toLocaleString()]);
+        return new sqlCommand_1.SqlCommand(`INSERT INTO ${AccessLog.name} 
+            (${nameof_1.nameof("Name")}, ${nameof_1.nameof("State")}, ${nameof_1.nameof("EventTime")}) 
+            VALUES (?,?,?)`, [this.Name, this.State, this.EventTime.toLocaleString()]);
     }
 }
 exports.AccessLog = AccessLog;

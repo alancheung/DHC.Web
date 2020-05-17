@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sqlCommand = void 0;
-class sqlCommand {
+exports.SqlCommand = void 0;
+class SqlCommand {
     constructor(cmd, param) {
         this.command = cmd;
         this.parameters = param;
     }
 }
-exports.sqlCommand = sqlCommand;
+exports.SqlCommand = SqlCommand;
 //# sourceMappingURL=sqlCommand.js.map

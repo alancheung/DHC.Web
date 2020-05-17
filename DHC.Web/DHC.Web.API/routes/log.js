@@ -14,7 +14,7 @@ function getRoot(req, resp) {
             throw err;
         // Convert string back to TS date
         data.forEach(d => {
-            d.eventtime = new Date(d.eventtime);
+            d.EventTime = new Date(d.EventTime);
         });
         resp.json(data);
     });
@@ -26,9 +26,9 @@ function postRoot(req, resp) {
     }
     else {
         logEntry = new AccessLog_1.AccessLog();
-        logEntry.name = req.body.name;
-        logEntry.state = req.body.state;
-        logEntry.eventtime = req.body.eventtime || new Date();
+        logEntry.Name = req.body.name;
+        logEntry.State = req.body.state;
+        logEntry.EventTime = req.body.eventtime || new Date();
     }
     let insert = logEntry.insert();
     database_1.db.run(insert.command, insert.parameters, (err, data) => {
@@ -36,7 +36,7 @@ function postRoot(req, resp) {
             resp.status(500).json(err);
         }
         else {
-            console.log(`Inserted new ${logEntry.state ? 'open' : 'close'} record for ${logEntry.name} at ${logEntry.eventtime.toLocaleString()}`);
+            console.log(`Inserted new ${logEntry.State ? 'open' : 'close'} record for ${logEntry.Name} at ${logEntry.EventTime.toLocaleString()}`);
             resp.status(200).json(data);
         }
     });

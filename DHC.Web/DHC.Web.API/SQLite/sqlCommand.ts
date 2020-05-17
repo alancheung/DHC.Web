@@ -1,4 +1,4 @@
-class sqlCommand {
+class SqlCommand {
     public command: string;
     public parameters: any[];
 
@@ -8,4 +8,4 @@ class sqlCommand {
     }
 }
 
-export { sqlCommand }
+export { SqlCommand }

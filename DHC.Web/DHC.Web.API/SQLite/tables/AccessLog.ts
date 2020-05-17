@@ -1,30 +1,28 @@
-import { table } from "./sqliteTable";
-import { sqlCommand } from "../sqlCommand";
+import { SqlTable } from "./sqliteTable";
+import { SqlCommand } from "../sqlCommand";
+import { nameof } from '../../common/nameof';
 
-class AccessLog implements table {
-    public id: number;
-    public name: string;
-    public state: boolean;
-    public eventtime: Date;
+class AccessLog implements SqlTable {
+    public ID: number;
+    public Name: string;
+    public State: boolean;
+    public EventTime: Date;
 
-    //constructor (portal: string, open: boolean, eventtime: Date) {
-    //    this.portalName = portal;
-    //    this.state = open;
-    //    this.eventtime = eventtime;
-    //}
-
-    static createTable(): string {
-        let seed = `CREATE TABLE AccessLog (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            state INTEGER,
-            eventtime TEXT)`;
+    createTable(): string {
+        let seed = `CREATE TABLE IF NOT EXISTS ${AccessLog.name} (
+            ${nameof<AccessLog>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${nameof<AccessLog>("Name")} TEXT,
+            ${nameof<AccessLog>("State")} INTEGER,
+            ${nameof<AccessLog>("EventTime")} TEXT)`;
 
         return seed;
     }
 
-    insert(): sqlCommand {
-        return new sqlCommand(`INSERT INTO AccessLog (name, state, eventtime) VALUES (?,?,?)`, [this.name, this.state, this.eventtime.toLocaleString()]);
+    insert(): SqlCommand {
+        return new SqlCommand(`INSERT INTO ${AccessLog.name} 
+            (${nameof<AccessLog>("Name")}, ${nameof<AccessLog>("State")}, ${nameof<AccessLog>("EventTime")}) 
+            VALUES (?,?,?)`,
+            [this.Name, this.State, this.EventTime.toLocaleString()]);
     }
 }
 

@@ -1,10 +1,14 @@
-import { sqlCommand } from "../sqlCommand";
+import { SqlCommand } from "../sqlCommand";
 
-interface table {
+interface SqlTable {
     /** Unique row id */
-    id: number;
+    ID: number;
 
-    insert(obj: any): sqlCommand;
+    /** Create a SQL command to create this table and return as a string */
+    createTable(): string;
+
+    /** Create a SqlCommand object that represents the INSERT INTO command for this table object instance. */
+    insert(): SqlCommand;
 }
 
-export { table }
+export { SqlTable }

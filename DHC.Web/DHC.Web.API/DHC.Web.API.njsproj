@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="common\" />
+    <Folder Include="config\" />
     <Folder Include="SQLite\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
@@ -57,16 +58,28 @@
     <TypeScriptCompile Include="common\nameof.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\database.ts">
+    <TypeScriptCompile Include="config\appconfig.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\sqlCommand.ts">
+    <TypeScriptCompile Include="config\NodeConfig.prod.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="config\NodeConfig.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\Database.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\SqlCommand.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\AccessLog.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\tables\sqliteTable.ts">
+    <TypeScriptCompile Include="SQLite\tables\SqliteTable.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\VersionHistory.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>
