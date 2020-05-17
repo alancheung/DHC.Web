@@ -1,5 +1,15 @@
-import debug = require('debug');
+import { ApplicationSettings, GetConfig } from './config/appconfig';
 import express = require('express');
+const app = express();
+
+// Set config as soon as possible so other modules can use them!
+if (app.get('env') === 'development') {
+    ApplicationSettings.Config = GetConfig(false);
+} else {
+    ApplicationSettings.Config = GetConfig(true);
+}
+
+import debug = require('debug');
 import path = require('path');
 import parser = require('body-parser');
 import cors = require('cors');
@@ -9,7 +19,6 @@ import log from './routes/log';
 import { Console } from 'console';
 import { db } from './SQLite/database';
 
-const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
