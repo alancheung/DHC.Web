@@ -1,8 +1,18 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <a class="navbar-brand" routerLink="">
-      <img src="favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
-      DHC - Decker
+    <img src="favicon.ico" width="30" height="30" class="d-inline-block align-top" alt="">
+    DHC - Decker
   </a>
+  <button class="navbar-toggler" 
+    type="button" 
+    data-toggle="collapse" 
+    data-target="#navbarSupportedContent" 
+    aria-controls="navbarSupportedContent" 
+    aria-expanded="false" 
+    aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
@@ -11,4 +21,5 @@
     </ul>
   </div>
 </nav>
+
 <router-outlet></router-outlet>
