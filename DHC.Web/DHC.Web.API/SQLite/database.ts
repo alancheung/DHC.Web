@@ -7,7 +7,7 @@ let sqlite3 = require('sqlite3').verbose();
 let md5 = require('md5');
 
 /** Filename of the database. */
-const DBSOURCE = "db.sqlite";
+const DBSOURCE = "dhc.sqlite";
 
 let test = ApplicationSettings.Config.currentDatabaseVersion;
 
