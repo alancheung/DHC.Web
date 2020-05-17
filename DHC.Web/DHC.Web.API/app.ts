@@ -15,7 +15,7 @@ import parser = require('body-parser');
 import cors = require('cors');
 
 import routes from './routes/index';
-import log from './routes/log';
+import LogController from './routes/LogController';
 import { Console } from 'console';
 import { db } from './SQLite/database';
 
@@ -34,7 +34,7 @@ app.use(cors());
 // Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
-app.use('/log', log);
+app.use('/log', LogController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

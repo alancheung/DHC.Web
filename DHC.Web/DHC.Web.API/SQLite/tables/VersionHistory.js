@@ -33,7 +33,7 @@ class VersionHistory {
             ${nameof_1.nameof("Version")} INTEGER,
             ${nameof_1.nameof("Notes")} TEXT,
             ${nameof_1.nameof("BootTime")}`;
-        return seed;
+        return new sqlCommand_1.SqlCommand(seed, []);
     }
     insert() {
         return new sqlCommand_1.SqlCommand(`INSERT INTO ${VersionHistory.name} 

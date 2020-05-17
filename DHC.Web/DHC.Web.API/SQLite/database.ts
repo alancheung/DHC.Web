@@ -17,8 +17,8 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err;
     } else {
         console.log('Connected to the SQLite database.');
-        db.run(new AccessLog().createTable(), (err) => { if (!err) { console.log(`${AccessLog.name} finished seed!`); } });
-        // db.run(new VersionHistory().createTable(), (err) => { if (!err) { console.log(`${VersionHistory.name} seeded!`); } });
+        db.run(new AccessLog().createTable().command, (err) => { if (!err) { console.log(`${AccessLog.name} finished seed!`); } });
+        // db.run(new VersionHistory().createTable().command, (err) => { if (!err) { console.log(`${VersionHistory.name} finished seed!`); } });
 
         console.log('Database created!');
     }

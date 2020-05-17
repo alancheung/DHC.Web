@@ -14,7 +14,7 @@ const path = require("path");
 const parser = require("body-parser");
 const cors = require("cors");
 const index_1 = require("./routes/index");
-const log_1 = require("./routes/log");
+const LogController_1 = require("./routes/LogController");
 const database_1 = require("./SQLite/database");
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -27,7 +27,7 @@ app.use(cors());
 // Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index_1.default);
-app.use('/log', log_1.default);
+app.use('/log', LogController_1.default);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
     const err = new Error('Not Found');

@@ -8,23 +8,48 @@ import { nameof } from '../common/nameof';
 const router = express.Router();
 const root: string = '/';
 
+/**
+ * Parse the return value of SQLiteDB.all commands for the AccessLog object.
+ * @param error
+ * @param data
+ */
+function parseDatabaseValues(error: any, data: AccessLog[]): AccessLog[] {
+    if (error) throw error;
+
+    // Convert string back to TS date
+    data.forEach(d => {
+        d.EventTime = new Date(d.EventTime);
+    });
+
+    return data;
+}
+
+
 // Register routes
 router.get(root, getRoot);
 router.post(root, postRoot);
+router.get(`${root}:name`, getLogsForName);
 
+/**
+ * ROUTE: GET ./log
+ * Returns all values from the AccessLog database table.
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
 function getRoot(req: Request, resp: Response): void {
     db.all(`SELECT * FROM ${AccessLog.name}`, (err, data: AccessLog[]) => {
-        if (err) throw err;
-
-        // Convert string back to TS date
-        data.forEach(d => {
-            d.EventTime = new Date(d.EventTime);
-        });
+        data = parseDatabaseValues(err, data);
 
         resp.json(data);
     });
 }
 
+/**
+ * ROUTE: POST ./log
+ * Add the object in the request body to the database.
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
 function postRoot(req: Request, resp: Response): void {
     let logEntry: AccessLog;
     if (req.body.name && req.body.state && req.body.eventtime) {
@@ -47,25 +72,23 @@ function postRoot(req: Request, resp: Response): void {
     });
 }
 
+/**
+ * ROUTE: GET ./log/{name}
+ * Add the object in the request body to the database.
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
+function getLogsForName(req: Request, resp: Response): void {
+    let searchName = req.params.name;
 
+    let sqlCommand =`SELECT * FROM ${AccessLog.name} 
+        WHERE ${nameof<AccessLog>('Name')} LIKE '%?%' 
+        ORDER BY ${nameof<AccessLog>('EventTime')} DESC`;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    db.run(sqlCommand, searchName, (err, data: AccessLog[]) => {
+        data = parseDatabaseValues(err, data);
+        resp.json(data);
+    });
+}
 
 export default router;

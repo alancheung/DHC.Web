@@ -10,7 +10,7 @@ class AccessLog {
             ${nameof_1.nameof("Name")} TEXT,
             ${nameof_1.nameof("State")} INTEGER,
             ${nameof_1.nameof("EventTime")} TEXT)`;
-        return seed;
+        return new sqlCommand_1.SqlCommand(seed, []);
     }
     insert() {
         return new sqlCommand_1.SqlCommand(`INSERT INTO ${AccessLog.name} 

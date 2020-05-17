@@ -8,14 +8,14 @@ class AccessLog implements SqlTable {
     public State: boolean;
     public EventTime: Date;
 
-    createTable(): string {
+    createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${AccessLog.name} (
             ${nameof<AccessLog>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof<AccessLog>("Name")} TEXT,
             ${nameof<AccessLog>("State")} INTEGER,
             ${nameof<AccessLog>("EventTime")} TEXT)`;
 
-        return seed;
+        return new SqlCommand(seed, []);
     }
 
     insert(): SqlCommand {

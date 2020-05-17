@@ -34,7 +34,7 @@ class VersionHistory implements SqlTable {
         return false;
     }
 
-    createTable(): string {
+    createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${VersionHistory.name} (
             ${nameof<VersionHistory>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof<VersionHistory>("Module")} TEXT,
@@ -42,7 +42,7 @@ class VersionHistory implements SqlTable {
             ${nameof<VersionHistory>("Notes")} TEXT,
             ${nameof<VersionHistory>("BootTime")}`;
 
-        return seed;
+        return new SqlCommand(seed, []);
     }
 
     insert(): SqlCommand {
