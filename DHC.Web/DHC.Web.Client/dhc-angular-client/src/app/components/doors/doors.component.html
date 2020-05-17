@@ -1,11 +1,16 @@
+<button type="button" class="btn btn-primary" (click)="onShowAllClick()">Show All</button>
+
 <ng-container *ngIf="loading; else elseTemplate">
     Loading...
 </ng-container>
 <ng-template #elseTemplate>
-    <div>
-        <span>{{latestRecord.name}} ({{latestRecord.id}}) is currently: {{latestRecord.state == 'True' ? 'Open!' : 'Closed!'}}</span>
+    <div *ngIf="latestRecord">
+        <span>{{latestRecord.Name}} ({{latestRecord.ID}}) is currently: {{latestRecord.State ? 'Open!' : 'Closed!'}}</span>
     </div>
     <div *ngFor="let l of logs">
-        <span>{{l.id}} :: {{l.name}} :: {{l.state}} :: {{l.eventtime}}</span>
+        <span>{{l.ID}} :: {{l.Name}} :: {{l.State}} :: {{l.EventTime}}</span>
+    </div>
+    <div *ngIf="!logs || logs.length === 0">
+        NO INFO
     </div>
 </ng-template>

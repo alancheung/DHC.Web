@@ -8,32 +8,35 @@ import { InformationLoader } from '../information-loader';
   templateUrl: './doors.component.html',
   styleUrls: ['./doors.component.css']
 })
-export class DoorsComponent  implements OnInit, InformationLoader {
+export class DoorsComponent implements OnInit, InformationLoader {
+  public displayAll: boolean = false;
   public loading: boolean = true;
   public logs: any[];
 
   public latestRecord: any;
 
-  constructor(private api: DhcApiService) { }
+  constructor(private api: DhcApiService) { 
+    this.logs = [];
+  }
 
   ngOnInit(): void {
-    this.api.getLogs().subscribe((data: any[]) => {
+    this.loadLogs('OfficeDoor')
+  };
+
+  private loadLogs(portalName: string): void {
+    this.loading = true;
+    this.api.getLogForPortal(portalName).subscribe((data: any[]) => {
       this.loading = false;
-
-      let lastTime: Date;
-      data.forEach(d => {
-        d.datetime = new Date(d.eventtime);
-        if (!lastTime || (d.datetime >= lastTime && d.name == 'OfficeDoor')){
-          this.latestRecord = d;
-          lastTime = d.datetime;
-        }
-      }, err => {
-        console.error(err);
-        this.loading = false;
-      });
-
+      data.forEach(d => d.datetime = new Date(d.eventtime));
       this.logs = data;
+      this.latestRecord = this.logs[0];
+    }, err => {
+      this.loading = false;
+      console.error(err);
     });
   }
 
+  public onShowAllClick(){
+    this.loadLogs('');
+  }
 }

@@ -16,9 +16,18 @@ export class DhcApiService {
   }
 
   /**
-   * Get all AccessLog records from the API
+   * Get all AccessLog records from the API.
    */
-  public getLogs(): Observable<any> {
+  public getLogs(): Observable<any>{
     return this.http.get<any>(this.accessLogEndpoint);
+  }
+
+  /**
+   * Look up all AccessLog records from the API for a specific door.
+   * @param portalName Name of access portal argument
+   */
+  public getLogForPortal(portalName: string): Observable<any> {
+      // User requested specific portal name so get that one
+      return this.http.get<any>(`${this.accessLogEndpoint}/${portalName}`);
   }
 }
