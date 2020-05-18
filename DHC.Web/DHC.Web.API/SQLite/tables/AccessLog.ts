@@ -1,5 +1,5 @@
-import { SqlTable } from "./sqliteTable";
-import { SqlCommand } from "../sqlCommand";
+import { SqlTable } from "../common-db/sqliteTable";
+import { SqlCommand } from "../common-db/sqlCommand";
 import { nameof } from '../../common/nameof';
 import { isbooleantrue } from "../../common/isbooleantrue";
 

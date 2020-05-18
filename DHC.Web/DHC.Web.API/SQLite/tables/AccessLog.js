@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessLog = void 0;
-const sqlCommand_1 = require("../sqlCommand");
+const sqlCommand_1 = require("../common-db/sqlCommand");
 const nameof_1 = require("../../common/nameof");
 const isbooleantrue_1 = require("../../common/isbooleantrue");
 class AccessLog {

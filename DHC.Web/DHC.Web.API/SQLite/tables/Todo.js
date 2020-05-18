@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Todo = void 0;
-const sqlCommand_1 = require("../sqlCommand");
-const DateTable_1 = require("./DateTable");
+const sqlCommand_1 = require("../common-db/sqlCommand");
+const DateTable_1 = require("../common-db/DateTable");
 const nameof_1 = require("../../common/nameof");
 class Todo extends DateTable_1.DateTable {
     constructor(data) {

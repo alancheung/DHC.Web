@@ -47,6 +47,7 @@
     <Folder Include="src\common\" />
     <Folder Include="src\environments\" />
     <Folder Include="src\SQLite\" />
+    <Folder Include="src\SQLite\common-db\" />
     <Folder Include="src\SQLite\tables\" />
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +115,6 @@
     <TypeScriptCompile Include="src\SQLite\Database.ts" />
     <TypeScriptCompile Include="src\SQLite\SqlCommand.ts" />
     <TypeScriptCompile Include="src\SQLite\tables\AccessLog.ts" />
-    <TypeScriptCompile Include="src\SQLite\tables\SqliteTable.ts" />
     <TypeScriptCompile Include="src\SQLite\tables\VersionHistory.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

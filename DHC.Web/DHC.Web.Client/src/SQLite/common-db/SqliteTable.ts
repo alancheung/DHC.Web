@@ -1,4 +1,4 @@
-import { SqlCommand } from "../sqlCommand";
+import { SqlCommand } from "./sqlCommand";
 
 interface SqlTable {
     /** Unique row id */

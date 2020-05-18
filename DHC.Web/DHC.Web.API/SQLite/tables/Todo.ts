@@ -1,6 +1,6 @@
-import { SqlTable } from "./sqliteTable";
-import { SqlCommand } from "../sqlCommand";
-import { DateTable } from "./DateTable";
+import { SqlTable } from "../common-db/sqliteTable";
+import { SqlCommand } from "../common-db/sqlCommand";
+import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";
 
 export class Todo extends DateTable implements SqlTable {

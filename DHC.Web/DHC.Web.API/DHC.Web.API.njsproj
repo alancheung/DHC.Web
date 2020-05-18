@@ -51,6 +51,7 @@
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="routes\" />
+    <Folder Include="SQLite\common-db\" />
     <Folder Include="SQLite\tables\" />
     <Folder Include="views\" />
   </ItemGroup>
@@ -76,16 +77,16 @@
     <TypeScriptCompile Include="SQLite\Database.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\SqlCommand.ts">
+    <TypeScriptCompile Include="SQLite\common-db\SqlCommand.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\AccessLog.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\tables\DateTable.ts">
+    <TypeScriptCompile Include="SQLite\common-db\DateTable.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\tables\SqliteTable.ts">
+    <TypeScriptCompile Include="SQLite\common-db\SqliteTable.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\Todo.ts">
