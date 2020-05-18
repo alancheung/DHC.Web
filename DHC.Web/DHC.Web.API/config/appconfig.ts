@@ -2,6 +2,7 @@ import { DevConfig } from "./NodeConfig";
 import { ProdConfig } from "./NodeConfig.prod";
 
 export interface AppConfig {
+    openPort: number;
     currentSoftwareVersion: number;
     currentDatabaseVersion: number;
 }

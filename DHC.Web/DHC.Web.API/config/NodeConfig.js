@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DevConfig = void 0;
 class DevConfig {
     constructor() {
+        this.openPort = 3000;
         this.currentSoftwareVersion = 0;
         this.currentDatabaseVersion = 0;
     }

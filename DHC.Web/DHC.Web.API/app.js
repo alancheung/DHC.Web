@@ -60,7 +60,7 @@ else {
 // initialize database
 let database = database_1.db;
 // start listening
-app.set('port', process.env.PORT || 3000);
+app.set('port', appconfig_1.ApplicationSettings.Config.openPort);
 const server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + server.address().port);
 });

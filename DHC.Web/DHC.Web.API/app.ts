@@ -28,7 +28,6 @@ app.set('view engine', 'pug');
 // THIS MUST HAPPEN BEFORE DEFINING ROUTES
 app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json());
-
 app.use(cors());
 
 // Define routes and controllers here
@@ -70,7 +69,7 @@ if (app.get('env') === 'development') {
 let database: any = db;
 
 // start listening
-app.set('port', process.env.PORT || 3000);
+app.set('port', ApplicationSettings.Config.openPort);
 const server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + server.address().port);
 });
