@@ -1,3 +1,0 @@
-# DHC.API.HelloWorld
-
-
