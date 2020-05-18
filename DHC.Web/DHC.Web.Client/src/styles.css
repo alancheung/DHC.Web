@@ -6,3 +6,7 @@
 .center {
     text-align: center;
 }
+
+.mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #225500;
+}

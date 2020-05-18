@@ -15,7 +15,7 @@ export class DoorsComponent implements OnInit, InformationLoader {
 
   public latestRecord: any;
 
-  constructor(private api: DhcApiService) { 
+  constructor(private api: DhcApiService) {
     this.logs = [];
   }
 
@@ -36,7 +36,7 @@ export class DoorsComponent implements OnInit, InformationLoader {
     });
   }
 
-  public onShowAllClick(){
+  public onShowAllClick() {
     this.loadLogs('');
   }
 }

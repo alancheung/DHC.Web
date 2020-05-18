@@ -41,6 +41,7 @@
     <Folder Include="src\app\components\doors\" />
     <Folder Include="src\app\components\index\" />
     <Folder Include="src\app\modules\" />
+    <Folder Include="src\app\loader-service\" />
     <Folder Include="src\app\services\" />
     <Folder Include="src\assets\" />
     <Folder Include="src\environments\" />
@@ -105,7 +106,6 @@
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\polyfills.ts" />
-    <TypeScriptCompile Include="src\test.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

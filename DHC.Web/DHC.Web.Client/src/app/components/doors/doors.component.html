@@ -1,16 +1,18 @@
-<button type="button" class="btn btn-primary" (click)="onShowAllClick()">Show All</button>
+<div class="center">
 
-<ng-container *ngIf="loading; else elseTemplate">
-    Loading...
-</ng-container>
-<ng-template #elseTemplate>
+  <ng-container *ngIf="loading; else elseTemplate">
+    <mat-spinner></mat-spinner>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <button type="button" class="btn btn-primary" (click)="onShowAllClick()">Show All</button>
     <div *ngIf="latestRecord">
-        <span>{{latestRecord.Name}} ({{latestRecord.ID}}) is currently: {{latestRecord.State ? 'Open!' : 'Closed!'}}</span>
+      <span>{{latestRecord.Name}} ({{latestRecord.ID}}) is currently: {{latestRecord.State ? 'Open!' : 'Closed!'}}</span>
     </div>
     <div *ngFor="let l of logs">
-        <span>{{l.ID}} :: {{l.Name}} :: {{l.State}} :: {{l.EventTime}}</span>
+      <span>{{l.ID}} :: {{l.Name}} :: {{l.State}} :: {{l.EventTime}}</span>
     </div>
     <div *ngIf="!logs || logs.length === 0">
-        NO INFO
+      NO INFO
     </div>
-</ng-template>
+  </ng-template>
+</div>
