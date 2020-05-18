@@ -16,6 +16,7 @@ import cors = require('cors');
 
 import routes from './routes/index';
 import LogController from './routes/LogController';
+import TodoController from './routes/TodoController';
 import { Console } from 'console';
 import { db } from './SQLite/database';
 

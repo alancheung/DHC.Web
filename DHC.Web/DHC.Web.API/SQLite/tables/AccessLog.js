@@ -3,7 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccessLog = void 0;
 const sqlCommand_1 = require("../sqlCommand");
 const nameof_1 = require("../../common/nameof");
+const isbooleantrue_1 = require("../../common/isbooleantrue");
 class AccessLog {
+    constructor(data) {
+        // Convert string back to TS date
+        if (data) {
+            this.ID = data.ID;
+            this.Name = data.Name;
+            this.EventTime = new Date(data.EventTime);
+            this.State = isbooleantrue_1.isbooleantrue(data.State);
+        }
+    }
     createTable() {
         let seed = `CREATE TABLE IF NOT EXISTS ${AccessLog.name} (
             ${nameof_1.nameof("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,

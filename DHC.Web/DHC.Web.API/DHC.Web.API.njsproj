@@ -70,6 +70,9 @@
     <TypeScriptCompile Include="config\NodeConfig.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="routes\TodoController.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\Database.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
@@ -79,7 +82,13 @@
     <TypeScriptCompile Include="SQLite\tables\AccessLog.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\DateTable.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\SqliteTable.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\Todo.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\VersionHistory.ts">

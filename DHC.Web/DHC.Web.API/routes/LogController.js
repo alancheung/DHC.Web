@@ -5,29 +5,9 @@ const database_1 = require("../SQLite/database");
 const AccessLog_1 = require("../SQLite/tables/AccessLog");
 const nameof_1 = require("../common/nameof");
 const isbooleantrue_1 = require("../common/isbooleantrue");
+// Register routes
 const router = express.Router();
 const root = '/';
-/**
- * Parse the return value of SQLiteDB.all commands for the AccessLog object.
- * @param error
- * @param data
- */
-function parseDatabaseValues(error, data) {
-    if (error)
-        console.log(error);
-    // Convert string back to TS date
-    if (data) {
-        data.forEach(d => {
-            d.EventTime = new Date(d.EventTime);
-            d.State = isbooleantrue_1.isbooleantrue(d.State);
-        });
-        return data;
-    }
-    else {
-        return new AccessLog_1.AccessLog[0];
-    }
-}
-// Register routes
 router.get(root, getRoot);
 router.post(root, postRoot);
 router.get(`${root}:name`, getLogsForName);
@@ -39,7 +19,9 @@ router.get(`${root}:name`, getLogsForName);
  */
 function getRoot(req, resp) {
     database_1.db.all(`SELECT * FROM ${AccessLog_1.AccessLog.name}`, (err, data) => {
-        data = parseDatabaseValues(err, data);
+        if (err)
+            console.log(err);
+        data = data.map(d => new AccessLog_1.AccessLog(d));
         resp.json(data);
     });
 }
@@ -55,10 +37,10 @@ function postRoot(req, resp) {
         logEntry = req.body;
     }
     else {
-        logEntry = new AccessLog_1.AccessLog();
-        logEntry.Name = req.body.name;
-        logEntry.State = isbooleantrue_1.isbooleantrue(req.body.state);
-        logEntry.EventTime = req.body.eventtime || new Date();
+        logEntry = new AccessLog_1.AccessLog(req.body);
+        logEntry.Name = req.body.Name;
+        logEntry.State = isbooleantrue_1.isbooleantrue(req.body.State);
+        logEntry.EventTime = req.body.EventTime || new Date();
     }
     let insert = logEntry.insert();
     database_1.db.run(insert.command, insert.parameters, (err, data) => {
@@ -81,7 +63,9 @@ function getLogsForName(req, resp) {
     let searchName = `%${req.params.name}%`;
     let sqlCommand = `SELECT * FROM ${AccessLog_1.AccessLog.name} WHERE ${nameof_1.nameof('Name')} LIKE ? ORDER BY ${nameof_1.nameof('EventTime')} DESC`;
     database_1.db.all(sqlCommand, searchName, (err, data) => {
-        data = parseDatabaseValues(err, data);
+        if (err)
+            console.log(err);
+        data = data.map(d => new AccessLog_1.AccessLog(d));
         resp.json(data);
     });
 }
