@@ -4,6 +4,7 @@ exports.DevConfig = void 0;
 class DevConfig {
     constructor() {
         this.openPort = 3000;
+        this.redirectAddress = "http://localhost:4200";
         this.currentSoftwareVersion = 0;
         this.currentDatabaseVersion = 0;
     }

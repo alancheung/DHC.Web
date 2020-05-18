@@ -2,8 +2,16 @@ import { DevConfig } from "./NodeConfig";
 import { ProdConfig } from "./NodeConfig.prod";
 
 export interface AppConfig {
+    /** The port this Express server is listening on. */
     openPort: number;
+
+    /** The web address to redirect web requests too */
+    redirectAddress: string;
+
+    /** Current software version */
     currentSoftwareVersion: number;
+
+    /** Current database version */
     currentDatabaseVersion: number;
 }
 
