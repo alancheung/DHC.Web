@@ -6,8 +6,8 @@ import { ApplicationSettings } from "../config/appconfig";
 let sqlite3 = require('sqlite3').verbose();
 let md5 = require('md5');
 
-/** Filename of the database. */
-const DBSOURCE = "dhc.sqlite";
+let DBSOURCE = ApplicationSettings.Config.dbSource;
+console.log(`Database created from ${DBSOURCE} file.`);
 
 /** Database definition */
 let db = new sqlite3.Database(DBSOURCE, (err) => {

@@ -2,6 +2,9 @@ import { DevConfig } from "./NodeConfig";
 import { ProdConfig } from "./NodeConfig.prod";
 
 export interface AppConfig {
+    /** SQLite file location */
+    dbSource: string;
+
     /** The port this Express server is listening on. */
     openPort: number;
 
