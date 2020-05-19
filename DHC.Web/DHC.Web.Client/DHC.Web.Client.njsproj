@@ -40,6 +40,7 @@
     <Folder Include="src\app\components\" />
     <Folder Include="src\app\components\doors\" />
     <Folder Include="src\app\components\index\" />
+    <Folder Include="src\app\components\project\" />
     <Folder Include="src\app\modules\" />
     <Folder Include="src\app\loader-service\" />
     <Folder Include="src\app\services\" />
@@ -87,6 +88,8 @@
     <Content Include="src\app\components\doors\doors.component.html" />
     <Content Include="src\app\components\index\index.component.css" />
     <Content Include="src\app\components\index\index.component.html" />
+    <Content Include="src\app\components\project\project.component.css" />
+    <Content Include="src\app\components\project\project.component.html" />
     <Content Include="src\assets\.gitkeep" />
     <Content Include="src\assets\underconstruction.jpeg" />
     <Content Include="src\favicon.ico" />
@@ -103,6 +106,7 @@
     <TypeScriptCompile Include="src\app\components\doors\doors.component.ts" />
     <TypeScriptCompile Include="src\app\components\index\index.component.ts" />
     <TypeScriptCompile Include="src\app\components\information-loader.ts" />
+    <TypeScriptCompile Include="src\app\components\project\project.component.ts" />
     <TypeScriptCompile Include="src\app\modules\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-api.service.ts" />
     <TypeScriptCompile Include="src\common\isbooleantrue.ts" />
