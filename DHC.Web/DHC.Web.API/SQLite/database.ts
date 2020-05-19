@@ -46,13 +46,13 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         db.run(new AccessLog(null).createTable().command, (err) => reportStatus(err, AccessLog.name));
         db.run(new Project(null).createTable().command, (err) => reportStatus(err, Project.name));
         db.run(new Todo(null).createTable().command, (err) => reportStatus(err, Todo.name));
-
-        // Create Indexes!
-        db.run(createLatestIndex('LatestEventTime', AccessLog.name, nameof<AccessLog>("EventTime")));
-        db.run(createLatestIndex('WipTodo', Todo.name, nameof<Todo>("EndDate")));
-
-        console.log('Database created!');
+        console.log('Database Tables created created!');
     }
 });
+
+// Create Indexes!
+console.log('Creating indexes!');
+db.run(createLatestIndex('LatestEventTime', AccessLog.name, nameof<AccessLog>("EventTime")));
+db.run(createLatestIndex('WipTodo', Todo.name, nameof<Todo>("EndDate")));
 
 export { db }
