@@ -1,6 +1,24 @@
-export class DateTable {
+import { SqlTable } from "./sqliteTable";
+import { SqlCommand } from "./sqlCommand";
+
+export abstract class DateTable implements SqlTable {
+    ID: number;
     public StartDate: Date;
     public EndDate: Date;
+
+    constructor(data: any) {
+        if (data) {
+            this.ID = data.ID;
+            this.parseDates(data.StartDate, data.EndDate);
+        }
+    }
+
+    createTable(): SqlCommand {
+        throw new Error("Method should be implemented by child.");
+    }
+    insert(): SqlCommand {
+        throw new Error("Method should be implemented by child.");
+    }
 
     /**
      * Convert string dates to TS Date objects.

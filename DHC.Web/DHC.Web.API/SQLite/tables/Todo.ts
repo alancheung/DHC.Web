@@ -2,23 +2,30 @@ import { SqlTable } from "../common-db/sqliteTable";
 import { SqlCommand } from "../common-db/sqlCommand";
 import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";
+import { Project } from "./Project";
 
-export class Todo extends DateTable implements SqlTable {
+export class Todo extends DateTable {
     public ID: number;
-    public StartDate: Date;
-    public EndDate: Date;
-    
+
+    /** Description of task to be performed. */
     public Task: string;
+
+    /** Simple ordering system based on priority */
     public Priority: number;
 
+    /** What project does this task relate to? */
+    public Project: Project;
+
+    /** Foreign Key value to Project */
+    public ProjectId: number;
+
     constructor(data: any) {
-        super();
+        super(data);
         // Convert string back to TS date
         if (data) {
             this.ID = data.ID;
             this.Task = data.Task;
             this.Priority = data.Priority;
-            this.parseDates(data.StartDate, data.EndDate);
         }
     }
 
@@ -27,8 +34,9 @@ export class Todo extends DateTable implements SqlTable {
             ${nameof<Todo>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof<Todo>("StartDate")} TEXT,
             ${nameof<Todo>("EndDate")} TEXT,
-            ${nameof<Todo>("Task")} TEXT,
-            ${nameof<Todo>("Priority")} INTEGER)`;
+            ${nameof<Todo>("Task")} TEXT NOT NULL,
+            ${nameof<Todo>("Priority")} INTEGER,
+            ${nameof<Todo>("ProjectId")} INTEGER REFERENCES ${Project.name} (${nameof<Project>("ID")}) ON DELETE CASCADE)`;
 
         return new SqlCommand(seed, []);
     }
@@ -39,5 +47,4 @@ export class Todo extends DateTable implements SqlTable {
             VALUES (?,?,?)`,
             [this.StartDate.toLocaleString(), this.Priority, this.Task]);
     }
-
 }

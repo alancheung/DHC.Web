@@ -1,5 +1,6 @@
 import { SqlCommand } from "./sqlCommand";
 
+/** A database table in SQLite that represents a unique table key and commands to create and insert the table. */
 interface SqlTable {
     /** Unique row id */
     ID: number;
