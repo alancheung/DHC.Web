@@ -2,6 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DateTable = void 0;
 class DateTable {
+    constructor(data) {
+        if (data) {
+            this.ID = data.ID;
+            this.parseDates(data.StartDate, data.EndDate);
+        }
+    }
+    createTable() {
+        throw new Error("Method should be implemented by child.");
+    }
+    insert() {
+        throw new Error("Method should be implemented by child.");
+    }
     /**
      * Convert string dates to TS Date objects.
      * @param start

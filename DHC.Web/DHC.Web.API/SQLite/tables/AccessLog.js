@@ -6,10 +6,10 @@ const nameof_1 = require("../../common/nameof");
 const isbooleantrue_1 = require("../../common/isbooleantrue");
 class AccessLog {
     constructor(data) {
-        // Convert string back to TS date
         if (data) {
             this.ID = data.ID;
             this.Name = data.Name;
+            // Convert string back to TS date
             this.EventTime = new Date(data.EventTime);
             this.State = isbooleantrue_1.isbooleantrue(data.State);
         }
@@ -19,7 +19,7 @@ class AccessLog {
             ${nameof_1.nameof("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof_1.nameof("Name")} TEXT,
             ${nameof_1.nameof("State")} INTEGER,
-            ${nameof_1.nameof("EventTime")} TEXT)`;
+            ${nameof_1.nameof("EventTime")} TEXT NOT NULL)`;
         return new sqlCommand_1.SqlCommand(seed, []);
     }
     insert() {

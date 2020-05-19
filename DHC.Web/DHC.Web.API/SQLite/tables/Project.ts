@@ -25,11 +25,11 @@ export class Project extends DateTable {
     createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${Project.name} (
             ${nameof<Project>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${nameof<Project>("StartDate")} TEXT,
+            ${nameof<Project>("StartDate")} TEXT NOT NULL,
             ${nameof<Project>("EndDate")} TEXT,
             ${nameof<Project>("Name")} TEXT NOT NULL,
             ${nameof<Project>("Description")} TEXT
-            ${nameof<Project>("Link")} TEXT`;
+            ${nameof<Project>("Link")} TEXT)`;
 
         return new SqlCommand(seed, []);
     }

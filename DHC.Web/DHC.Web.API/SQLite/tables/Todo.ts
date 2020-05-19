@@ -32,7 +32,7 @@ export class Todo extends DateTable {
     createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${Todo.name} (
             ${nameof<Todo>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${nameof<Todo>("StartDate")} TEXT,
+            ${nameof<Todo>("StartDate")} TEXT NOT NULL,
             ${nameof<Todo>("EndDate")} TEXT,
             ${nameof<Todo>("Task")} TEXT NOT NULL,
             ${nameof<Todo>("Priority")} INTEGER,

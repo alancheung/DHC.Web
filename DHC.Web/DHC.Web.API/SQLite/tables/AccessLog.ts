@@ -10,10 +10,10 @@ class AccessLog implements SqlTable {
     public EventTime: Date;
 
     constructor(data: any) {
-        // Convert string back to TS date
         if (data) {
             this.ID = data.ID;
             this.Name = data.Name;
+            // Convert string back to TS date
             this.EventTime = new Date(data.EventTime);
             this.State = isbooleantrue(data.State);
         }
@@ -24,7 +24,7 @@ class AccessLog implements SqlTable {
             ${nameof<AccessLog>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof<AccessLog>("Name")} TEXT,
             ${nameof<AccessLog>("State")} INTEGER,
-            ${nameof<AccessLog>("EventTime")} TEXT)`;
+            ${nameof<AccessLog>("EventTime")} TEXT NOT NULL)`;
 
         return new SqlCommand(seed, []);
     }
