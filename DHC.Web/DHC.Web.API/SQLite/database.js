@@ -24,12 +24,12 @@ function createLatestIndex(indexName, table, column) {
  * @param err Error from SQLite3 if it exists.
  * @param tableName The table name this operation was performed on.
  */
-function reportStatus(err, tableName) {
+function reportStatus(err, tableName, command) {
     if (err) {
-        console.error(`${tableName} failed seed due to ${err}`);
+        console.error(`${tableName} failed '${command}' due to ${err}`);
     }
     else {
-        console.log(`${tableName} finished seed!`);
+        console.log(`${tableName} finished ${command}!`);
     }
 }
 /** Database definition */
@@ -41,15 +41,17 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
     }
     else {
         console.log('Connected to the SQLite database.');
-        db.run(new AccessLog_1.AccessLog(null).createTable().command, (err) => reportStatus(err, AccessLog_1.AccessLog.name));
-        db.run(new Project_1.Project(null).createTable().command, (err) => reportStatus(err, Project_1.Project.name));
-        db.run(new Todo_1.Todo(null).createTable().command, (err) => reportStatus(err, Todo_1.Todo.name));
+        db.run(new AccessLog_1.AccessLog(null).createTable().command, (err) => reportStatus(err, AccessLog_1.AccessLog.name, 'seed'));
+        db.run(new Project_1.Project(null).createTable().command, (err) => reportStatus(err, Project_1.Project.name, 'seed'));
+        db.run(new Todo_1.Todo(null).createTable().command, (err) => reportStatus(err, Todo_1.Todo.name, 'seed'));
         console.log('Database Tables created created!');
+        setTimeout(() => {
+            // Create Indexes!
+            console.log('Creating indexes after sleeping 1 second!');
+            db.run(createLatestIndex('LatestEventTime', AccessLog_1.AccessLog.name, nameof_1.nameof("EventTime")), err => reportStatus(err, AccessLog_1.AccessLog.name, 'INDEX LatestEventTime'));
+            db.run(createLatestIndex('WipTodo', Todo_1.Todo.name, nameof_1.nameof("EndDate")), err => reportStatus(err, Todo_1.Todo.name, 'INDEX WipTodo'));
+        }, 1000);
     }
 });
 exports.db = db;
-// Create Indexes!
-console.log('Creating indexes!');
-db.run(createLatestIndex('LatestEventTime', AccessLog_1.AccessLog.name, nameof_1.nameof("EventTime")));
-db.run(createLatestIndex('WipTodo', Todo_1.Todo.name, nameof_1.nameof("EndDate")));
 //# sourceMappingURL=database.js.map

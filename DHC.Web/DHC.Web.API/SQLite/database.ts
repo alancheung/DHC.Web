@@ -27,11 +27,11 @@ function createLatestIndex(indexName: string, table: string, column: string) {
  * @param err Error from SQLite3 if it exists.
  * @param tableName The table name this operation was performed on.
  */
-function reportStatus (err: any, tableName: string) {
+function reportStatus (err: any, tableName: string, command: string) {
     if (err) {
-        console.error(`${tableName} failed seed due to ${err}`);
+        console.error(`${tableName} failed '${command}' due to ${err}`);
     } else {
-        console.log(`${tableName} finished seed!`);
+        console.log(`${tableName} finished ${command}!`);
     }
 }
 
@@ -43,16 +43,18 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
         throw err;
     } else {
         console.log('Connected to the SQLite database.');
-        db.run(new AccessLog(null).createTable().command, (err) => reportStatus(err, AccessLog.name));
-        db.run(new Project(null).createTable().command, (err) => reportStatus(err, Project.name));
-        db.run(new Todo(null).createTable().command, (err) => reportStatus(err, Todo.name));
+        db.run(new AccessLog(null).createTable().command, (err) => reportStatus(err, AccessLog.name, 'seed'));
+        db.run(new Project(null).createTable().command, (err) => reportStatus(err, Project.name, 'seed'));
+        db.run(new Todo(null).createTable().command, (err) => reportStatus(err, Todo.name, 'seed'));
         console.log('Database Tables created created!');
+
+        setTimeout(() => {
+            // Create Indexes!
+            console.log('Creating indexes after sleeping 1 second!');
+            db.run(createLatestIndex('LatestEventTime', AccessLog.name, nameof<AccessLog>("EventTime")), err => reportStatus(err, AccessLog.name, 'INDEX LatestEventTime'));
+            db.run(createLatestIndex('WipTodo', Todo.name, nameof<Todo>("EndDate")), err => reportStatus(err, Todo.name, 'INDEX WipTodo'));
+        }, 1000);
     }
 });
-
-// Create Indexes!
-console.log('Creating indexes!');
-db.run(createLatestIndex('LatestEventTime', AccessLog.name, nameof<AccessLog>("EventTime")));
-db.run(createLatestIndex('WipTodo', Todo.name, nameof<Todo>("EndDate")));
 
 export { db }
