@@ -47,6 +47,9 @@
     <Folder Include="src\assets\" />
     <Folder Include="src\common\" />
     <Folder Include="src\environments\" />
+    <Folder Include="src\SQLite\" />
+    <Folder Include="src\SQLite\common-db\" />
+    <Folder Include="src\SQLite\tables\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".editorconfig" />
@@ -97,6 +100,27 @@
     <Content Include="tslint.json" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\common-db\DateTable.ts">
+      <Link>src\SQLite\common-db\DateTable.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\common-db\SqlCommand.ts">
+      <Link>src\SQLite\common-db\SqlCommand.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\common-db\SqliteTable.ts">
+      <Link>src\SQLite\common-db\SqliteTable.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\tables\AccessLog.ts">
+      <Link>src\SQLite\tables\AccessLog.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\tables\Project.ts">
+      <Link>src\SQLite\tables\Project.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\tables\Todo.ts">
+      <Link>src\SQLite\tables\Todo.ts</Link>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="..\DHC.Web.API\SQLite\tables\VersionHistory.ts">
+      <Link>src\SQLite\tables\VersionHistory.ts</Link>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\app.component.ts" />
     <TypeScriptCompile Include="src\app\app.module.ts" />
     <TypeScriptCompile Include="src\app\components\doors\doors.component.ts" />
@@ -112,6 +136,13 @@
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\polyfills.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\DateTable.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\SqlCommand.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\SqliteTable.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\AccessLog.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\Project.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\Todo.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\VersionHistory.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
