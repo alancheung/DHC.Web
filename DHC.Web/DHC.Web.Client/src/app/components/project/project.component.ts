@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Project } from '../../../SQLite/tables/Project';
 
 @Component({
   selector: 'app-project',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
+  public activeProjects: Project;
 
   constructor() { }
 
   ngOnInit(): void {
-  }
 
+  }
 }
