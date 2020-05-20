@@ -78,7 +78,6 @@
     <Content Include="dist\dhc-angular-client\vendor-es2015.js.map" />
     <Content Include="dist\dhc-angular-client\vendor-es5.js" />
     <Content Include="dist\dhc-angular-client\vendor-es5.js.map" />
-    <Content Include="karma.conf.js" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
     <Content Include="src\app\app.component copy.html" />
