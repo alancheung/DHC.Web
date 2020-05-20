@@ -1,5 +1,5 @@
 import { AccessLog } from "./tables/AccessLog";
-import { SqlCommand } from "./sqlCommand";
+import { SqlCommand } from "./common-db/sqlCommand";
 import { VersionHistory } from "./tables/VersionHistory";
 import { ApplicationSettings } from "../config/appconfig";
 import { Project } from "./tables/Project";

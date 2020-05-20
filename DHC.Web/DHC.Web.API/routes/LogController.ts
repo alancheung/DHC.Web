@@ -1,7 +1,7 @@
 import express = require('express');
 import { db } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { SqlCommand } from '../SQLite/sqlCommand';
+import { SqlCommand } from '../SQLite/common-db/sqlCommand';
 import { AccessLog } from '../SQLite/tables/AccessLog';
 import { nameof } from '../common/nameof';
 import { isbooleantrue } from '../common/isbooleantrue';
