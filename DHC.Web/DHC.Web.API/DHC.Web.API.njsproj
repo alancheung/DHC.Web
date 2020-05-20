@@ -71,7 +71,7 @@
     <TypeScriptCompile Include="config\NodeConfig.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="routes\TodoController.ts">
+    <TypeScriptCompile Include="routes\ProjectController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\Database.ts">

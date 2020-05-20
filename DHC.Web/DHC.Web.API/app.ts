@@ -16,7 +16,7 @@ import cors = require('cors');
 
 import routes from './routes/index';
 import LogController from './routes/LogController';
-import TodoController from './routes/TodoController';
+import ProjectController from './routes/ProjectController';
 import { Console } from 'console';
 import { db } from './SQLite/database';
 
@@ -35,6 +35,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/log', LogController);
+app.use('/project', ProjectController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

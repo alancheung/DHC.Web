@@ -6,10 +6,12 @@ import { nameof } from '../common/nameof';
 import { isbooleantrue } from '../common/isbooleantrue';
 import { Todo } from '../SQLite/tables/Todo';
 
+/** Router responsible for all requests relating to project/todo controls. */
+const projectRouter = express.Router();
+
 // Register routes
-const router = express.Router();
 const root: string = '/';
-router.get(root, getRoot);
+projectRouter.get(root, getRoot);
 
 /**
  * ROUTE: GET ./todo
@@ -26,4 +28,4 @@ function getRoot(req: Request, resp: Response): void {
     });
 }
 
-export default router;
+export default projectRouter;
