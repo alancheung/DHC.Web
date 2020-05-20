@@ -12,6 +12,8 @@ class Todo extends DateTable_1.DateTable {
         if (data) {
             this.ID = data.ID;
             this.Task = data.Task;
+            this.Type = data.Type;
+            this.Cost = data.Cost;
             this.Priority = data.Priority;
         }
     }
@@ -21,6 +23,8 @@ class Todo extends DateTable_1.DateTable {
             ${nameof_1.nameof("StartDate")} TEXT NOT NULL,
             ${nameof_1.nameof("EndDate")} TEXT,
             ${nameof_1.nameof("Task")} TEXT NOT NULL,
+            ${nameof_1.nameof("Type")} TEXT,
+            ${nameof_1.nameof("Cost")} REAL,
             ${nameof_1.nameof("Priority")} INTEGER,
             ${nameof_1.nameof("ProjectId")} INTEGER REFERENCES ${Project_1.Project.name} (${nameof_1.nameof("ID")}) ON DELETE CASCADE)`;
         return new sqlCommand_1.SqlCommand(seed, []);

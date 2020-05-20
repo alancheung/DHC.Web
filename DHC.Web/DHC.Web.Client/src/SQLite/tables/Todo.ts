@@ -10,12 +10,17 @@ export class Todo extends DateTable {
     /** Description of task to be performed. */
     public Task: string;
 
+    /** What type of Todo is this? */
+    public Type: string;
+
+    /** What was the cost associated? */
+    public Cost: number;
+
     /** Simple ordering system based on priority */
     public Priority: number;
 
     /** What project does this task relate to? */
     public Project: Project;
-
     /** Foreign Key value to Project */
     public ProjectId: number;
 
@@ -25,6 +30,8 @@ export class Todo extends DateTable {
         if (data) {
             this.ID = data.ID;
             this.Task = data.Task;
+            this.Type = data.Type;
+            this.Cost = data.Cost;
             this.Priority = data.Priority;
         }
     }
@@ -35,6 +42,8 @@ export class Todo extends DateTable {
             ${nameof<Todo>("StartDate")} TEXT NOT NULL,
             ${nameof<Todo>("EndDate")} TEXT,
             ${nameof<Todo>("Task")} TEXT NOT NULL,
+            ${nameof<Todo>("Type")} TEXT,
+            ${nameof<Todo>("Cost")} REAL,
             ${nameof<Todo>("Priority")} INTEGER,
             ${nameof<Todo>("ProjectId")} INTEGER REFERENCES ${Project.name} (${nameof<Project>("ID")}) ON DELETE CASCADE)`;
 

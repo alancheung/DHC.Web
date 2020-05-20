@@ -116,6 +116,13 @@
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\polyfills.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\DateTable.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\SqlCommand.ts" />
+    <TypeScriptCompile Include="src\SQLite\common-db\SqliteTable.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\AccessLog.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\Project.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\Todo.ts" />
+    <TypeScriptCompile Include="src\SQLite\tables\VersionHistory.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>
