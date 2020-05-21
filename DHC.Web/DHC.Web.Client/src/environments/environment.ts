@@ -7,6 +7,7 @@ export const environment: appconfig = {
   production: false,
   apiEndpoint: 'http://localhost:3000',
   accessEndpoint: '/log',
+  projectEndpoint: '/project',
 };
 
 /*
