@@ -1,9 +1,9 @@
-import { SqlTable } from "../common-db/SqliteTable";
+import { SqliteTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { nameof } from '../../common/nameof';
 import { isbooleantrue } from "../../common/isbooleantrue";
 
-class AccessLog implements SqlTable {
+class AccessLog implements SqliteTable {
     public ID: number;
     public Name: string;
     public State: boolean;

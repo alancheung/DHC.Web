@@ -1,4 +1,4 @@
-import { SqlTable } from "../common-db/SqliteTable";
+import { SqliteTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";

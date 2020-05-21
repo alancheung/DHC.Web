@@ -1,4 +1,4 @@
-import { SqlTable } from "../common-db/SqliteTable";
+import { SqliteTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { nameof } from '../../common/nameof';
 
@@ -8,7 +8,7 @@ enum VersionHistoryModules {
     Database,
 }
 
-class VersionHistory implements SqlTable {
+class VersionHistory implements SqliteTable {
     ID: number;
     Module: VersionHistoryModules;
     Version: number;
