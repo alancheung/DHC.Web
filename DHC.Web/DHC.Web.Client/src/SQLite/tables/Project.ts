@@ -2,6 +2,7 @@ import { SqlTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";
+import { Todo } from "./Todo";
 
 export class Project extends DateTable {
     ID: number;
@@ -14,6 +15,9 @@ export class Project extends DateTable {
 
     /** Link to repository if it exists */
     public Link: string;
+
+    /** Any associated tasks with this project? In memory property only, not reflected in database schema. */
+    public Tasks: Todo[];
 
     constructor(data: any) {
         super(data);

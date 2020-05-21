@@ -129,6 +129,12 @@
     <TypeScriptCompile Include="src\app\components\project\project.component.ts" />
     <TypeScriptCompile Include="src\app\modules\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-api.service.ts" />
+    <TypeScriptCompile Include="src\app\services\dhc-log-api.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\app\services\dhc-project-api.service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="src\common\isbooleantrue.ts" />
     <TypeScriptCompile Include="src\common\nameof.ts" />
     <TypeScriptCompile Include="src\environments\appconfig.ts" />

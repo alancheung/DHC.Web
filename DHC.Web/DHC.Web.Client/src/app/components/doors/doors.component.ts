@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { DhcApiService } from 'src/app/services/dhc-api.service';
 import { Observable, Subject } from 'rxjs';
 import { InformationLoaderComponent } from '../information-loader';
 import { nameof } from '../../../common/nameof';
 import { AccessLog } from '../../../SQLite/tables/AccessLog';
+import { DhcLogApiService } from '../../services/dhc-log-api.service';
 
 @Component({
   selector: 'app-doors',
@@ -17,7 +17,7 @@ export class DoorsComponent extends InformationLoaderComponent implements OnInit
 
   public latestRecord: any;
 
-  constructor(private api: DhcApiService) {
+  constructor(private api: DhcLogApiService) {
     super();
     this.logs = [];
   }
