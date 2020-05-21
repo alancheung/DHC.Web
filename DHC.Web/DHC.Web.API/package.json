@@ -19,7 +19,8 @@
     "md5": "^2.2.1",
     "pug": "^2.0.0-rc.3",
     "socket.io": "^2.3.0",
-    "sqlite3": "^4.2.0"
+    "sqlite3": "^4.2.0",
+    "tsc": "^1.20150623.0"
   },
   "devDependencies": {
     "@types/debug": "0.0.30",
