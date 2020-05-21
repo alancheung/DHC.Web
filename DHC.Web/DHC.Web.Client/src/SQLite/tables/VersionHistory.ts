@@ -1,5 +1,5 @@
-import { SqlTable } from "../common-db/sqliteTable";
-import { SqlCommand } from "../common-db/sqlCommand";
+import { SqlTable } from "../common-db/SqliteTable";
+import { SqlCommand } from "../common-db/SqlCommand";
 import { nameof } from '../../common/nameof';
 
 /** Types of things tracked by this version history table. */
