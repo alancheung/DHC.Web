@@ -1,4 +1,4 @@
-import { SqlCommand } from "./sqlCommand";
+import { SqlCommand } from "./SqlCommand";
 
 /** A database table in SQLite that represents a unique table key and commands to create and insert the table. */
 interface SqlTable {

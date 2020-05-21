@@ -1,5 +1,5 @@
-import { SqlTable } from "./sqliteTable";
-import { SqlCommand } from "./sqlCommand";
+import { SqlTable } from "./SqliteTable";
+import { SqlCommand } from "./SqlCommand";
 
 export abstract class DateTable implements SqlTable {
     ID: number;
