@@ -12,4 +12,9 @@ export abstract class Table implements SqliteTable {
 
     abstract createTable(): SqlCommand;
     abstract insert(): SqlCommand;
+
+    /** TODO Add for all tables */
+    public validate(): boolean {
+        return true;
+    }
 }
