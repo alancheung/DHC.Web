@@ -1,5 +1,5 @@
 import express = require('express');
-import { db } from '../SQLite/database';
+import { DhcDatabaseContext, DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { SqlCommand } from '../SQLite/common-db/SqlCommand';
 import { AccessLog } from '../SQLite/tables/AccessLog';
@@ -20,7 +20,7 @@ router.get(`${root}:name`, getLogsForName);
  * @param resp Express Response object.
  */
 function getRoot(req: Request, resp: Response): void {
-    db.all(`SELECT * FROM ${AccessLog.name}`, (err, data: AccessLog[]) => {
+    DhcDatabase.Context.all(`SELECT * FROM ${AccessLog.name}`, (err, data: AccessLog[]) => {
         if (err) console.log(err);
         data = data.map(d => new AccessLog(d));
 
@@ -46,7 +46,7 @@ function postRoot(req: Request, resp: Response): void {
     }
 
     let insert: SqlCommand = logEntry.insert();
-    db.run(insert.command, insert.parameters, (err, data) => {
+    DhcDatabase.Context.run(insert.command, insert.parameters, (err, data) => {
         if (err) {
             resp.status(500).json(err);
         } else {
@@ -67,7 +67,7 @@ function getLogsForName(req: Request, resp: Response): void {
 
     let sqlCommand = `SELECT * FROM ${AccessLog.name} WHERE ${nameof<AccessLog>('Name')} LIKE ? ORDER BY ${nameof<AccessLog>('EventTime')} DESC`;
 
-    db.all(sqlCommand, searchName, (err, data: AccessLog[]) => {
+    DhcDatabase.Context.all(sqlCommand, searchName, (err, data: AccessLog[]) => {
         if (err) console.log(err);
         data = data.map(d => new AccessLog(d));
         resp.json(data);

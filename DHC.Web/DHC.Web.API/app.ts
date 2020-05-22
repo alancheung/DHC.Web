@@ -18,7 +18,7 @@ import routes from './routes/index';
 import LogController from './routes/LogController';
 import ProjectController from './routes/ProjectController';
 import { Console } from 'console';
-import { db } from './SQLite/database';
+import { DhcDatabaseContext } from './SQLite/database';
 
 
 // view engine setup
@@ -68,7 +68,7 @@ if (app.get('env') === 'development') {
 }
 
 // initialize database
-let database: any = db;
+let database: any = DhcDatabaseContext;
 
 // start listening
 app.set('port', ApplicationSettings.Config.openPort);

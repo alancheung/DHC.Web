@@ -1,5 +1,5 @@
 import express = require('express');
-import { db } from '../SQLite/database';
+import { DhcDatabaseContext, DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { SqlCommand } from '../SQLite/common-db/SqlCommand';
 import { nameof } from '../common/nameof';
@@ -23,7 +23,7 @@ projectRouter.get(`${root}:id`, getTasksForID);
  */
 function getRoot(req: Request, resp: Response): void {
     let command = `SELECT * FROM ${Project.name} p ORDER BY ${nameof<Project>("StartDate")} DESC`;
-    db.all(command, (err, data: any[]) => {
+    DhcDatabase.Context.all(command, (err, data: any[]) => {
         if (err) console.log(err);
         resp.json(data);
     });
@@ -39,7 +39,7 @@ function getTasksForID(req: Request, resp: Response): void {
     let searchName = `%${req.params.id}%`;
     let sqlCommand = `SELECT * FROM ${Todo.name} WHERE ${nameof<Todo>('ProjectId')} LIKE ? ORDER BY ${nameof<Todo>('Priority')}, ${nameof<Todo>('StartDate')} DESC`;
 
-    db.all(sqlCommand, searchName, (err, data: any[]) => {
+    DhcDatabase.Context.all(sqlCommand, searchName, (err, data: any[]) => {
         if (err) console.log(err);
         resp.json(data);
     });

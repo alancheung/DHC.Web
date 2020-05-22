@@ -25,7 +25,11 @@ export abstract class DateTable implements SqliteTable {
      * @param end
      */
     public parseDates(start: string, end: string): void {
-        this.StartDate = new Date(start);
-        this.EndDate = new Date(end);
+        if (start) {
+            this.StartDate = new Date(start);
+        }
+        if (end) {
+            this.EndDate = new Date(end);
+        }
     }
 }
