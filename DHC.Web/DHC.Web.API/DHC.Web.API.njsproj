@@ -95,6 +95,9 @@
     <TypeScriptCompile Include="SQLite\tables\Project.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\SensorReading.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\Todo.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
