@@ -19,7 +19,7 @@ import routes from './routes/index';
 import LogController from './routes/LogController';
 import ProjectController from './routes/ProjectController';
 import SensorController from './routes/SensorController';
-
+import LifxController from './routes/LifxController';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,6 +37,7 @@ app.use('/', routes);
 app.use('/log', LogController);
 app.use('/project', ProjectController);
 app.use('/api/sensor', SensorController);
+app.use('/api/lifx', LifxController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

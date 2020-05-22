@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="common\" />
     <Folder Include="config\" />
+    <Folder Include="LIFX\" />
     <Folder Include="SQLite\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
@@ -69,6 +70,12 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="config\NodeConfig.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="LIFX\LifxWrapper.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="routes\LifxController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="routes\SensorController.ts" />
