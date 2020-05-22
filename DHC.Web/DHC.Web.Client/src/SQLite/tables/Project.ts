@@ -1,12 +1,9 @@
-import { SqlTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";
 import { Todo } from "./Todo";
 
 export class Project extends DateTable {
-    ID: number;
-
     /** Name of new project in progress */
     public Name: string;
 

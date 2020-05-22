@@ -1,6 +1,6 @@
-import { SqlTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { nameof } from '../../common/nameof';
+import { Table } from "../common-db/Table";
 
 /** Types of things tracked by this version history table. */
 enum VersionHistoryModules {
@@ -8,8 +8,7 @@ enum VersionHistoryModules {
     Database,
 }
 
-class VersionHistory implements SqlTable {
-    ID: number;
+class VersionHistory extends Table {
     Module: VersionHistoryModules;
     Version: number;
     Notes: string;

@@ -1,17 +1,16 @@
-import { SqliteTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { nameof } from '../../common/nameof';
 import { isbooleantrue } from "../../common/isbooleantrue";
+import { Table } from "../common-db/Table";
 
-class AccessLog implements SqliteTable {
-    public ID: number;
+class AccessLog extends Table {
     public Name: string;
     public State: boolean;
     public EventTime: Date;
 
     constructor(data: any) {
+        super(data);
         if (data) {
-            this.ID = data.ID;
             this.Name = data.Name;
             // Convert string back to TS date
             this.EventTime = new Date(data.EventTime);

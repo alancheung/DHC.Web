@@ -8,7 +8,6 @@ export abstract class DateTable implements SqliteTable {
 
     constructor(data: any) {
         if (data) {
-            this.ID = data.ID;
             this.parseDates(data.StartDate, data.EndDate);
         }
     }

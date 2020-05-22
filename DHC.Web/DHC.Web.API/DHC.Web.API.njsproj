@@ -74,6 +74,9 @@
     <TypeScriptCompile Include="routes\ProjectController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\common-db\Table.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\Database.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

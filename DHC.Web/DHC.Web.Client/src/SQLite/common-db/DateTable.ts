@@ -1,14 +1,13 @@
-import { SqlTable } from "./SqliteTable";
+import { SqliteTable } from "./SqliteTable";
 import { SqlCommand } from "./SqlCommand";
 
-export abstract class DateTable implements SqlTable {
+export abstract class DateTable implements SqliteTable {
     ID: number;
     public StartDate: Date;
     public EndDate: Date;
 
     constructor(data: any) {
         if (data) {
-            this.ID = data.ID;
             this.parseDates(data.StartDate, data.EndDate);
         }
     }

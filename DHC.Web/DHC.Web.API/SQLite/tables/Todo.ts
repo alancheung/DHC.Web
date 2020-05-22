@@ -1,12 +1,9 @@
-import { SqliteTable } from "../common-db/SqliteTable";
 import { SqlCommand } from "../common-db/SqlCommand";
 import { DateTable } from "../common-db/DateTable";
 import { nameof } from "../../common/nameof";
 import { Project } from "./Project";
 
 export class Todo extends DateTable {
-    public ID: number;
-
     /** Description of task to be performed. */
     public Task: string;
 
