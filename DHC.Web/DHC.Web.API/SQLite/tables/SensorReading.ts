@@ -25,10 +25,10 @@ export class SensorReading extends DateTable {
     constructor(data) {
         super(data);
         if (data) {
-            this.SourceHostName = data.SourceHostName || 'UNKNOWN';
-            this.SensorModel = data.SensorModel || 'UNKNOWN';
-            this.ReadingType = data.ReadingType || 'UNKNOWN';
-            this.ReadingValue = data.ReadingValue || -1;
+            this.SourceHostName = data.SourceHostName;
+            this.SensorModel = data.SensorModel;
+            this.ReadingType = data.ReadingType;
+            this.ReadingValue = data.ReadingValue;
         }
     }
 
@@ -60,6 +60,10 @@ export class SensorReading extends DateTable {
             this.SensorModel,
             this.ReadingType.toString(),
             this.ReadingValue])
+    }
+
+    validate(): boolean {
+        return (!!this.StartDate && !!this.SourceHostName && !!this.SensorModel && !!this.ReadingType && (!!this.ReadingValue || this.ReadingValue == 0));
     }
 
 }

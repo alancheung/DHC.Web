@@ -9,6 +9,7 @@ if (app.get('env') === 'development') {
     ApplicationSettings.Config = GetConfig(true);
 }
 
+import { Console } from 'console';
 import debug = require('debug');
 import path = require('path');
 import parser = require('body-parser');
@@ -17,7 +18,7 @@ import cors = require('cors');
 import routes from './routes/index';
 import LogController from './routes/LogController';
 import ProjectController from './routes/ProjectController';
-import { Console } from 'console';
+import SensorController from './routes/SensorController';
 import { DhcDatabaseContext } from './SQLite/database';
 
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/log', LogController);
 app.use('/project', ProjectController);
+app.use('/api/sensor', SensorController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

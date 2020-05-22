@@ -10,6 +10,9 @@ interface SqliteTable {
 
     /** Create a SqlCommand object that represents the INSERT INTO command for this table object instance. */
     insert(): SqlCommand;
+
+    /** Verify that the table entry can be put into the database */
+    validate(): boolean;
 }
 
 export { SqliteTable }
