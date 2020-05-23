@@ -1,7 +1,7 @@
 import express = require('express');
 import { Request, Response } from 'express';
-import { isbooleantrue } from '../common/isbooleantrue';
 import { LifxWrapper } from '../LIFX/LifxWrapper';
+import { LifxCommand } from '../LIFX/LifxCommand';
 
 const LightManager: LifxWrapper = new LifxWrapper();
 
@@ -18,16 +18,12 @@ projectRouter.post(`${root}`, controlLight);
  * @param req Express Request object.
  * @param resp Express Response object.
  */
-function controlLight(req: Request, resp: Response): void {
-    let state = isbooleantrue(req.body.State);
+function controlLight(req: Request, resp: Response) {
+    let settings: LifxCommand = new LifxCommand(req.body);
 
-    if (state) {
-        LightManager.turnOnOffice();
-    } else {
-        LightManager.turnOffOffice();
-    }
+    LightManager.handle(settings);
 
-
+    resp.status(200);
 }
 
 export default projectRouter;
