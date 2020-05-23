@@ -8,9 +8,8 @@ import { SensorReading } from '../SQLite/tables/SensorReading';
 
 // Register routes
 const router = express.Router();
-const root: string = '/';
-router.get(root, getRoot);
-router.post(root, postRoot);
+router.get('/', getRoot);
+router.post('/', postRoot);
 
 /**
  * ROUTE: GET ./sensor
@@ -19,10 +18,13 @@ router.post(root, postRoot);
  * @param resp Express Response object.
  */
 function getRoot(req: Request, resp: Response): void {
-    DhcDatabase.Context.all(`SELECT * FROM ${SensorReading.name}`, (err, data: SensorReading[]) => {
-        if (err) console.log(err);
-
-        resp.json(data);
+    DhcDatabase.Context.all(`SELECT * FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("StartDate")} DESC`, (err, data: SensorReading[]) => {
+        if (err) {
+            console.log(err);
+            resp.json(500).json(err);
+        } else {
+            resp.json(data);
+        }
     });
 }
 

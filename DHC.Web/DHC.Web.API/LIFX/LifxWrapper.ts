@@ -26,9 +26,21 @@ export class LifxWrapper {
      * @param settings
      */
     public handle(settings: LifxCommand) {
+        let details: any = {
+            // Fake LifxLanFilter based on light name (label) only
+            filters: settings.Lights.map(l => { return { label: l }; }),
+            duration: settings.Duration
+        };
+
+        // Determine if the settings had a valid color change in it.
+        if (settings.validColorChange()) {
+            details.color = { hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin }
+        }
+        console.log(`Parsed light settings: ${JSON.stringify(details)}`);
+
         let rejectChain: Promise<void> = Promise.reject();
         for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
-            rejectChain = rejectChain.catch(() => this.updateLights(settings)).catch(this._delay);
+            rejectChain = rejectChain.catch(() => this.updateLights(settings, details)).catch(this._delay);
         }
 
         rejectChain = rejectChain.catch((err) => {
@@ -39,22 +51,11 @@ export class LifxWrapper {
     /**
      * Parses the new light settings described in settings and updates the lights.
      * @param settings New light settings.
+     * @param details Settings parameter converted to node-lifx-lan readable obj format.
      */
-    private async updateLights(settings: LifxCommand): Promise<void> {
+    private async updateLights(settings: LifxCommand, details: any): Promise<void> {
         let cmdName: string = 'UNKNOWN';
         return await this._lifx.discover().then(() => {
-            let details: any = {
-                // Fake LifxLanFilter based on light name (label) only
-                filters: settings.Lights.map(l => { return { label: l }; }),
-                duration: settings.Duration
-            };
-
-            // Determine if the settings had a valid color change in it.
-            if (settings.validColorChange()) {
-                details.color = { hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin }
-            }
-
-            console.log(`Parsed light settings: ${JSON.stringify(details)}`);
             if (settings.TurnOn) {
                 cmdName = 'ON';
                 return Lifx.turnOnFilter(details);
