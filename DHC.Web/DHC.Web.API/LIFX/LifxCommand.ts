@@ -42,8 +42,8 @@ export class LifxCommand {
         this.Lights = parsedData.Lights;
         this.TurnOn = isbooleantrue(parsedData.TurnOn);
         this.TurnOff = isbooleantrue(parsedData.TurnOff);
-        this.Duration = parsedData.Duration;
-        this.Color = [parsedData.Hue, parsedData.Saturation, parsedData.Brightness, parsedData.Kelvin];
+        this.Duration = +parsedData.Duration;
+        this.Color = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
     }
 
     /** Make sure that there is a value for all colors and a valid transition duration. */

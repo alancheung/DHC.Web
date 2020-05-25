@@ -18,12 +18,11 @@ projectRouter.post(`${root}`, controlLight);
  * @param req Express Request object.
  * @param resp Express Response object.
  */
-function controlLight(req: Request, resp: Response) {
+async function controlLight(req: Request, resp: Response) {
     let settings: LifxCommand = new LifxCommand(req.body);
-
-    LightManager.handle(settings);
-
-    resp.status(200);
+    return await LightManager.handle(settings)
+        .then(() => resp.status(200).send())
+        .catch((err) => resp.status(500).send());
 }
 
 export default projectRouter;
