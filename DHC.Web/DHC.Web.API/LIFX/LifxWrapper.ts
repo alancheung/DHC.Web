@@ -84,12 +84,8 @@ export class LifxWrapper {
         }).then(() => {
             console.log(`New '${cmdName}' command sent to '${settings.Lights}'!`);
         }).catch((err) => {
-            if ((err.hasOwnProperty('message') && err.message.indexOf('No device was found') < 0)) {
-                console.error(`Error (${err}) sending '${cmdName}' command to '${settings.Lights}'`)
-            } else {
-                console.log(`Lights [${settings.Lights}] not found after discovery! Known lights '${this._lifx._device_list.map(device => device['deviceInfo']['label'])}'`);
-                throw 'Retry!';
-            }
+            console.log(`Error (${err}) sending '${cmdName}' command to '${settings.Lights}'! Known lights '${this._lifx._device_list.map(device => device['deviceInfo']['label'])}'`);
+            throw 'Retry!';
         });
     }
 
