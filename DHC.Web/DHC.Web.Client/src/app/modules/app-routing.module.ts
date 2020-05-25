@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DoorsComponent } from '../components/doors/doors.component';
 import { IndexComponent } from '../components/index/index.component';
 import { ProjectComponent } from '../components/project/project.component';
+import { SensorComponent } from '../components/sensor/sensor.component';
 
 /**
  * Application routes available.
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'doors', component: DoorsComponent },
   { path: 'projects', component: ProjectComponent },
+  { path: 'sensor', component: SensorComponent },
 ];
 
 @NgModule({
