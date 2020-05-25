@@ -48,7 +48,7 @@ function postRoot(req: Request, resp: Response): void {
         if (err) {
             resp.status(500).json(err);
         } else {
-            console.log(`Recorded ${reading.ReadingType} from ${reading.SourceHostName}:${reading.SensorModel} of ${reading.ReadingValue}`);
+            console.log(`${new Date().toLocaleString()}: Recorded ${reading.ReadingType} from ${reading.SourceHostName}:${reading.SensorModel} of ${reading.ReadingValue}`);
             resp.status(200).json(req.body);
         }
     });
