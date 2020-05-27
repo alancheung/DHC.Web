@@ -44,7 +44,7 @@ export class LifxWrapper {
         // Attempt commands with delay!
         let rejectChain: Promise<void> = Promise.reject();
         for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
-            rejectChain = rejectChain.catch(() => this.updateLights(settings, details)).catch(this._delay);
+            rejectChain = rejectChain.catch(() => this.updateLights(attempt, settings, details)).catch(this._delay);
         }
 
         // Give back the result from above
@@ -55,16 +55,18 @@ export class LifxWrapper {
 
     /**
      * Parses the new light settings described in settings and updates the lights.
+     * @param attempt The number of attempts previously tried to invoke the commands.
      * @param settings New light settings.
      * @param details Settings parameter converted to node-lifx-lan readable obj format.
      */
-    private async updateLights(settings: LifxCommand, details: any): Promise<void> {
+    private async updateLights(attempt: number, settings: LifxCommand, details: any): Promise<void> {
+        // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
-        if (this.lightsDiscovered(settings.Lights)) {
-            // Lights are known let's ignore
+        if (this.lightsDiscovered(settings.Lights) && attempt == 0) {
+            // Assume lights are known and no discovery necessary if the lights are in the known list and this is the first attempt.
             discover = Promise.resolve();
         } else {
-            // Welp missing some lights, try to find.
+            // Attempt discovery in any lights are missing or we've failed more than once.
             discover = this._lifx.discover().then(this.printDiscovery);
         }
 
