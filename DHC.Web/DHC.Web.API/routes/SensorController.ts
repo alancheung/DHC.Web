@@ -19,7 +19,7 @@ router.post('/', postRoot);
  * @param resp Express Response object.
  */
 function getRoot(req: Request, resp: Response): void {
-    DhcDatabase.Context.all(`SELECT TOP(300) * FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("StartDate")} DESC`, (err, data: SensorReading[]) => {
+    DhcDatabase.Context.all(`SELECT TOP(300) * FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("ID")} DESC`, (err, data: SensorReading[]) => {
         if (err) {
             console.log(err);
             resp.json(500).json(err);
