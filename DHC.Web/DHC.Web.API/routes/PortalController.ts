@@ -1,5 +1,5 @@
 import express = require('express');
-import { DhcDatabaseContext, DhcDatabase } from '../SQLite/database';
+import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { SqlCommand } from '../SQLite/common-db/SqlCommand';
 import { AccessLog } from '../SQLite/tables/AccessLog';
