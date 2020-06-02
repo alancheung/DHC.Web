@@ -42,8 +42,9 @@
     <Folder Include="src\app\components\index\" />
     <Folder Include="src\app\components\project\" />
     <Folder Include="src\app\components\sensor\" />
+    <Folder Include="src\app\directives\loading\" />
     <Folder Include="src\app\modules\" />
-    <Folder Include="src\app\loader-service\" />
+    <Folder Include="src\app\directives\" />
     <Folder Include="src\app\services\" />
     <Folder Include="src\assets\" />
     <Folder Include="src\common\" />
@@ -92,6 +93,8 @@
     <Content Include="src\app\components\project\project.component.html" />
     <Content Include="src\app\components\sensor\sensor.component.css" />
     <Content Include="src\app\components\sensor\sensor.component.html" />
+    <Content Include="src\app\directives\loading\loading.component.css" />
+    <Content Include="src\app\directives\loading\loading.component.html" />
     <Content Include="src\assets\.gitkeep" />
     <Content Include="src\assets\underconstruction.jpeg" />
     <Content Include="src\favicon.ico" />
@@ -110,6 +113,8 @@
     <TypeScriptCompile Include="src\app\components\information-loader.ts" />
     <TypeScriptCompile Include="src\app\components\project\project.component.ts" />
     <TypeScriptCompile Include="src\app\components\sensor\sensor.component.ts" />
+    <TypeScriptCompile Include="src\app\directives\loading\loading.component.ts" />
+    <TypeScriptCompile Include="src\app\directives\loading\loading.directive.ts" />
     <TypeScriptCompile Include="src\app\modules\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-api.service.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-log-api.service.ts">

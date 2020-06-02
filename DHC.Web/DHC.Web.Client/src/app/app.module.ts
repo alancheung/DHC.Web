@@ -9,6 +9,8 @@ import { DoorsComponent } from './components/doors/doors.component';
 import { IndexComponent } from './components/index/index.component';
 import { ProjectComponent } from './components/project/project.component';
 import { SensorComponent } from './components/sensor/sensor.component';
+import { LoadingDirective } from './directives/loading/loading.directive';
+import { LoadingComponent } from './directives/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { SensorComponent } from './components/sensor/sensor.component';
     DoorsComponent,
     IndexComponent,
     ProjectComponent,
-    SensorComponent
+    SensorComponent,
+    LoadingDirective,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
