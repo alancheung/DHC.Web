@@ -10,4 +10,7 @@ export interface appconfig {
 
   /** URL address modifier for Project/Todos */
   projectEndpoint: string;
+
+  /** URL address modifier for Sensor */
+  sensorEndpoint: string;
 }

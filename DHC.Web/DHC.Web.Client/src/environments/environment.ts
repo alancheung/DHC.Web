@@ -8,6 +8,7 @@ export const environment: appconfig = {
   apiEndpoint: 'http://localhost:3000',
   portalEndpoint: '/api/portal',
   projectEndpoint: '/api/project',
+  sensorEndpoint: '/api/sensor',
 };
 
 /*
