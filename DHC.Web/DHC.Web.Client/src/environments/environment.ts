@@ -6,8 +6,8 @@ import { appconfig } from './appconfig';
 export const environment: appconfig = {
   production: false,
   apiEndpoint: 'http://localhost:3000',
-  accessEndpoint: '/log',
-  projectEndpoint: '/project',
+  portalEndpoint: '/api/portal',
+  projectEndpoint: '/api/project',
 };
 
 /*

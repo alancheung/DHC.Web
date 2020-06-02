@@ -1,8 +1,4 @@
-<div class="center">
-  <ng-container *ngIf="loading; else elseTemplate">
-    <mat-spinner></mat-spinner>
-  </ng-container>
-  <ng-template #elseTemplate>
+<div class="center" *loading="loading">
     <button type="button" class="btn btn-primary" (click)="onShowAllClick()">Show All</button>
     <div *ngIf="latestRecord">
       <span>{{latestRecord.Name}} ({{latestRecord.ID}}) is currently: {{latestRecord.State ? 'Open!' : 'Closed!'}}</span>
@@ -13,5 +9,4 @@
     <div *ngIf="!logs || logs.length === 0">
       NO INFO
     </div>
-  </ng-template>
 </div>

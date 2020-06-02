@@ -117,7 +117,7 @@
     <TypeScriptCompile Include="src\app\directives\loading\loading.directive.ts" />
     <TypeScriptCompile Include="src\app\modules\app-routing.module.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-api.service.ts" />
-    <TypeScriptCompile Include="src\app\services\dhc-log-api.service.ts">
+    <TypeScriptCompile Include="src\app\services\dhc-log-portal.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\app\services\dhc-project-api.service.ts">

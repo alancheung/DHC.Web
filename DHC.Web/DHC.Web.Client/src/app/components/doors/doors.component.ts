@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { InformationLoaderComponent } from '../information-loader';
 import { nameof } from '../../../common/nameof';
 import { AccessLog } from '../../../SQLite/tables/AccessLog';
-import { DhcLogApiService } from '../../services/dhc-log-api.service';
+import { DhcPortalApiService } from '../../services/dhc-log-portal.service';
 
 @Component({
   selector: 'app-doors',
@@ -17,7 +17,7 @@ export class DoorsComponent extends InformationLoaderComponent implements OnInit
 
   public latestRecord: any;
 
-  constructor(private api: DhcLogApiService) {
+  constructor(private api: DhcPortalApiService) {
     super();
     this.logs = [];
   }

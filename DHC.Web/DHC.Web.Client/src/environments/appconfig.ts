@@ -6,7 +6,7 @@ export interface appconfig {
   apiEndpoint: string;
 
   /** URL address modifier for AccessLogs */
-  accessEndpoint: string;
+  portalEndpoint: string;
 
   /** URL address modifier for Project/Todos */
   projectEndpoint: string;
