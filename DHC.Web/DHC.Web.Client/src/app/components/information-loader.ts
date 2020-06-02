@@ -10,6 +10,7 @@ export abstract class InformationLoaderComponent implements OnDestroy {
   public unsubscribe$: Subject<void>;
 
   constructor() {
+    this.loading = true;
     this.unsubscribe$ = new Subject<void>();
   }
 
