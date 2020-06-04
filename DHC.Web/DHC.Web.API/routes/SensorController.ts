@@ -5,11 +5,38 @@ import { SqlCommand } from '../SQLite/common-db/SqlCommand';
 import { nameof } from '../common/nameof';
 import { isbooleantrue } from '../common/isbooleantrue';
 import { SensorReading } from '../SQLite/tables/SensorReading';
+import { ISensorLocationByCount } from './models/ISensorLocationByCount';
 
 // Register routes
 const router = express.Router();
+router.get('/locations', getSensorLocations)
+router.get('/locations/:location', getReadingsForLocation)
 router.get('/', getRoot);
 router.post('/', postRoot);
+
+function getSensorLocations(req: Request, resp: Response): void {
+    DhcDatabase.Context.all(`SELECT DISTINCT(${nameof<SensorReading>("Location")}) FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("Location")}`,
+        (err, data: SensorReading[]) => {
+        if (err) {
+            console.log(err);
+            resp.json(err);
+        } else {
+            resp.json(data);
+        }
+    });
+}
+
+function getReadingsForLocation(req: Request, resp: Response): void {
+    DhcDatabase.Context.all(`SELECT * FROM ${SensorReading.name} WHERE ${nameof<SensorReading>("Location")} = ? ORDER BY ${nameof<SensorReading>("ID")} DESC LIMIT 300`, req.params.location,
+        (err, data: SensorReading[]) => {
+            if (err) {
+                console.log(err);
+                resp.json(err);
+            } else {
+                resp.json(data);
+            }
+        });
+}
 
 /**
  * ROUTE: GET ./sensor

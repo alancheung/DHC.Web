@@ -17,6 +17,10 @@ export class DhcSensorApiService extends DhcApiService {
   }
 
   public getSensorLocationsByNumberOfReadings(): Observable<any> {
-    return this._http.get<any>(this._serviceAddress);
+    return this._http.get<any>(`${this._serviceAddress}/locations`);
+  }
+
+  public getReadingsForLocation(location: string): Observable<any> {
+    return this._http.get<any>(`${this._serviceAddress}/locations/${location}`, { params: { "location": location }});
   }
 }
