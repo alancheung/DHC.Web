@@ -47,7 +47,7 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="models\models.ts" />
-    <TypeScriptCompile Include="SQLite\databaseContext.ts">
+    <TypeScriptCompile Include="SQLite\context.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables.ts">

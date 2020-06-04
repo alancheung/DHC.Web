@@ -23,7 +23,7 @@ export interface SqliteTable {
     validate(): boolean;
 }
 
-export abstract class Table implements SqliteTable {
+export abstract class DatabaseTable implements SqliteTable {
     ID: number;
 
     constructor(data: any) {
@@ -41,7 +41,7 @@ export abstract class Table implements SqliteTable {
     }
 }
 
-export abstract class DateTable extends Table {
+export abstract class DateTable extends DatabaseTable {
     public StartDate: Date;
     public EndDate: Date;
 

@@ -1,7 +1,7 @@
 import express = require('express');
 import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { SqlCommand } from '../../DHC.Web.Common/SQLite/databaseContext';
+import { SqlCommand } from '../../DHC.Web.Common/SQLite/context';
 import { AccessLog } from '../../DHC.Web.Common/SQLite/tables';
 import { nameof, isbooleantrue } from '../../DHC.Web.Common/functions';
 

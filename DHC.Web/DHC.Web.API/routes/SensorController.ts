@@ -3,7 +3,7 @@ import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { nameof } from '../../DHC.Web.Common/functions';
 
-import { SqlCommand } from '../../DHC.Web.Common/SQLite/databaseContext';
+import { SqlCommand } from '../../DHC.Web.Common/SQLite/context';
 import { SensorReading } from '../../DHC.Web.Common/SQLite/tables';
 
 // Register routes
