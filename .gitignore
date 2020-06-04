@@ -8,9 +8,11 @@ environment.prod.ts
 *[Cc]onfig.prod.ts
 *[Cc]onfig.prod.js
 
-# Ignores TypeScript MapFiles, consider ignoring .js files?
+# Ignores TypeScript MapFiles
 *.js.map
 *.js
+*.d.ts
+*.d.ts.*
 
 # Ignore SQLite files
 *.sqlite

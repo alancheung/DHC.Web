@@ -1,11 +1,8 @@
 import express = require('express');
-import { DhcDatabaseContext, DhcDatabase } from '../SQLite/database';
+import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { SqlCommand } from '../SQLite/common-db/SqlCommand';
-import { nameof } from '../common/nameof';
-import { isbooleantrue } from '../common/isbooleantrue';
-import { Todo } from '../SQLite/tables/Todo';
-import { Project } from '../SQLite/tables/Project';
+import { nameof } from '../../DHC.Web.Common/functions';
+import { Todo, Project } from '../../DHC.Web.Common/SQLite/tables';
 
 /** Router responsible for all requests relating to project/todo controls. */
 const projectRouter = express.Router();

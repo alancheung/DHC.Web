@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Project } from '../../../SQLite/tables/Project';
 import { DhcProjectApiService } from '../../services/dhc-project-api.service';
-import { Todo } from '../../../SQLite/tables/Todo';
 import { InformationLoaderComponent } from '../information-loader';
+import { Project, Todo } from '../../../../../DHC.Web.Common/SQLite/tables';
 
 @Component({
   selector: 'app-project',

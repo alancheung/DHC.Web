@@ -1,11 +1,10 @@
 import express = require('express');
 import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { SqlCommand } from '../SQLite/common-db/SqlCommand';
-import { nameof } from '../common/nameof';
-import { isbooleantrue } from '../common/isbooleantrue';
-import { SensorReading } from '../SQLite/tables/SensorReading';
-import { ISensorLocationByCount } from './models/ISensorLocationByCount';
+import { nameof } from '../../DHC.Web.Common/functions';
+
+import { SqlCommand } from '../../DHC.Web.Common/SQLite/databaseContext';
+import { SensorReading } from '../../DHC.Web.Common/SQLite/tables';
 
 // Register routes
 const router = express.Router();

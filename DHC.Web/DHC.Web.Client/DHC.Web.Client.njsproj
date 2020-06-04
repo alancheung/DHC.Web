@@ -46,13 +46,8 @@
     <Folder Include="src\app\modules\" />
     <Folder Include="src\app\directives\" />
     <Folder Include="src\app\services\" />
-    <Folder Include="src\app\models\" />
     <Folder Include="src\assets\" />
-    <Folder Include="src\common\" />
     <Folder Include="src\environments\" />
-    <Folder Include="src\SQLite\" />
-    <Folder Include="src\SQLite\common-db\" />
-    <Folder Include="src\SQLite\tables\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".editorconfig" />
@@ -125,22 +120,11 @@
     <TypeScriptCompile Include="src\app\services\dhc-project-api.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\models\ISensorLocationByCount.ts" />
-    <TypeScriptCompile Include="src\common\isbooleantrue.ts" />
-    <TypeScriptCompile Include="src\common\nameof.ts" />
     <TypeScriptCompile Include="src\environments\appconfig.ts" />
     <TypeScriptCompile Include="src\environments\environment.prod.ts" />
     <TypeScriptCompile Include="src\environments\environment.ts" />
     <TypeScriptCompile Include="src\main.ts" />
     <TypeScriptCompile Include="src\polyfills.ts" />
-    <TypeScriptCompile Include="src\SQLite\common-db\DateTable.ts" />
-    <TypeScriptCompile Include="src\SQLite\common-db\SqlCommand.ts" />
-    <TypeScriptCompile Include="src\SQLite\common-db\SqliteTable.ts" />
-    <TypeScriptCompile Include="src\SQLite\common-db\Table.ts" />
-    <TypeScriptCompile Include="src\SQLite\tables\AccessLog.ts" />
-    <TypeScriptCompile Include="src\SQLite\tables\Project.ts" />
-    <TypeScriptCompile Include="src\SQLite\tables\Todo.ts" />
-    <TypeScriptCompile Include="src\SQLite\tables\VersionHistory.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

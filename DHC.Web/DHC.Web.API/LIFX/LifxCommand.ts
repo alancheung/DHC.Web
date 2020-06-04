@@ -1,4 +1,4 @@
-import { isbooleantrue } from "../common/isbooleantrue";
+import { isbooleantrue } from "../../DHC.Web.Common/functions";
 
 export class LifxCommand {
     /** Array of light names */

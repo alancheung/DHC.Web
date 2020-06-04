@@ -3,8 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { DhcApiService } from './dhc-api.service';
-import { Project } from '../../SQLite/tables/Project';
-import { Todo } from '../../SQLite/tables/Todo';
+import { Project, Todo } from '../../../../DHC.Web.Common/SQLite/tables';
 
 @Injectable({
   providedIn: 'root'

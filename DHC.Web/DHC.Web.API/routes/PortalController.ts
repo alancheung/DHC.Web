@@ -1,10 +1,9 @@
 import express = require('express');
 import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { SqlCommand } from '../SQLite/common-db/SqlCommand';
-import { AccessLog } from '../SQLite/tables/AccessLog';
-import { nameof } from '../common/nameof';
-import { isbooleantrue } from '../common/isbooleantrue';
+import { SqlCommand } from '../../DHC.Web.Common/SQLite/databaseContext';
+import { AccessLog } from '../../DHC.Web.Common/SQLite/tables';
+import { nameof, isbooleantrue } from '../../DHC.Web.Common/functions';
 
 // Register routes
 const router = express.Router();

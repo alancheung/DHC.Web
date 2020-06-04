@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
 import { InformationLoaderComponent } from '../information-loader';
-import { nameof } from '../../../common/nameof';
-import { AccessLog } from '../../../SQLite/tables/AccessLog';
 import { DhcPortalApiService } from '../../services/dhc-log-portal.service';
+import { AccessLog } from '../../../../../DHC.Web.Common/SQLite/tables';
 
 @Component({
   selector: 'app-doors',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InformationLoaderComponent } from '../information-loader';
 import { DhcSensorApiService } from '../../services/dhc-sensor-api.service';
-import { ISensorLocationByCount } from '../../models/ISensorLocationByCount';
+import { ISensorLocationByCount } from '../../../../../DHC.Web.Common/models/models';
 
 @Component({
   selector: 'app-sensor',

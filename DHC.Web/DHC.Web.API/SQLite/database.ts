@@ -1,15 +1,8 @@
-import { AccessLog } from "./tables/AccessLog";
-import { SqlCommand } from "./common-db/SqlCommand";
-import { VersionHistory } from "./tables/VersionHistory";
 import { ApplicationSettings } from "../config/appconfig";
-import { Project } from "./tables/Project";
-import { Todo } from "./tables/Todo";
-import { nameof } from "../common/nameof";
-import { SensorReading } from "./tables/SensorReading";
+import { AccessLog, Project, Todo, SensorReading } from '../../DHC.Web.Common/SQLite/tables';
+import { nameof } from "../../DHC.Web.Common/functions";
 
 let sqlite3 = require('sqlite3').verbose();
-let md5 = require('md5');
-
 /** DHC representation of a SQLite3 database context */
 class DhcDatabaseContext {
     /** Underlying database */
