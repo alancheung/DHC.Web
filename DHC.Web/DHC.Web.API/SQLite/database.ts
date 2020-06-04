@@ -1,5 +1,5 @@
 import { ApplicationSettings } from "../config/appconfig";
-import { AccessLog, Project, Todo, SensorReading } from '../../DHC.Web.Common/SQLite/tables';
+import { AccessLog, Project, Todo, SensorReading, Log } from '../../DHC.Web.Common/SQLite/tables';
 import { nameof } from "../../DHC.Web.Common/functions";
 
 let sqlite3 = require('sqlite3').verbose();
@@ -28,6 +28,7 @@ class DhcDatabaseContext {
                 this._db.run(new Project(null).createTable().command, (err) => this.reportStatus(err, Project.name, 'seed'));
                 this._db.run(new Todo(null).createTable().command, (err) => this.reportStatus(err, Todo.name, 'seed'));
                 this._db.run(new SensorReading(null).createTable().command, err => this.reportStatus(err, SensorReading.name, 'seed'));
+                this._db.run(new Log(null).createTable().command, err => this.reportStatus(err, Log.name, 'seed'));
                 console.log('Database Tables created created!');
 
                 setTimeout(() => {
