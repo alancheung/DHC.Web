@@ -50,4 +50,18 @@ export class LifxCommand {
     public validColorChange(): boolean {
         return this.Color.every(v => !!v || v == 0);
     }
+
+    public convertToLifxLanFilter(): any {
+        let details: any = {
+            // Fake LifxLanFilter based on light name (label) only
+            filters: this.Lights.map(l => { return { label: l }; }),
+            duration: this.Duration
+        };
+        // Determine if the settings had a valid color change in it.
+        if (this.validColorChange()) {
+            details.color = { hue: this.Hue, saturation: this.Saturation, brightness: this.Brightness, kelvin: this.Kelvin }
+        }
+
+        return details;
+    }
 }
