@@ -1,10 +1,6 @@
 import { LifxCommand } from "./LifxCommand";
 const Lifx = require('node-lifx-lan');
 
-let _officeOne: any;
-let _officeTwo: any;
-let _officeThree: any;
-
 export class LifxWrapper {
     private _lifx: any = Lifx;
     public get LifxClient() {
@@ -15,36 +11,61 @@ export class LifxWrapper {
     private _maxAttempts: number = 3;
 
     constructor() {
-        this.discover();
-    }
-
-    public discover(): void {
-        this.LifxClient.discover().then(this.printDiscovery)
-            .catch((error) => {
-                console.error(error);
-            });
+        this._lifx.discover().then(this.printDiscovery).catch((error) => {
+            console.error(error);
+        });
     }
 
     /**
      * Update the lights to the values described in settings
-     * @param settings
+     * @param command 
      */
-    public async handle(settings: LifxCommand): Promise<void> {
-        let details: any = {
-            // Fake LifxLanFilter based on light name (label) only
-            filters: settings.Lights.map(l => { return { label: l }; }),
-            duration: settings.Duration
-        };
-        // Determine if the settings had a valid color change in it.
-        if (settings.validColorChange()) {
-            details.color = { hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin }
-        }
-        console.log(`Parsed light settings: ${JSON.stringify(details)}`);
+    public async sendCommand(command: LifxCommand): Promise<void> {
+        let parsedCommand: any = command.convertToLifxLanFilter();
+        console.log(`Parsed library light settings: ${JSON.stringify(parsedCommand)}`);
 
         // Attempt commands with delay!
         let rejectChain: Promise<void> = Promise.reject();
         for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
-            rejectChain = rejectChain.catch(() => this.updateLights(attempt, settings, details)).catch(this._delay);
+            // Single command should attempt a discovery if any command has failed. Assume optimistic on first.
+            let forceDiscovery: boolean = attempt != 0;
+            rejectChain = rejectChain.catch(() => this.handle(forceDiscovery, command.Lights, command, parsedCommand)).catch(this.angryDelay);
+        }
+
+        // Give back the result from above
+        return rejectChain = rejectChain.catch((err) => {
+            console.log(`Light command failed after ${this._maxAttempts} attempts. Stopping command.`);
+        });
+    }
+
+    /**
+     * Update the lights to the values described in settings
+     * @param sequence
+     */
+    public async sendSequence(sequence: LifxCommand[]): Promise<void> {
+        let parsedSettings: any[] = sequence.map(cmd => cmd.convertToLifxLanFilter());
+        console.log(`Parsed library light settings: ${JSON.stringify(parsedSettings)}`);
+
+        // Attempt commands with delay!
+        let rejectChain: Promise<void> = Promise.reject();
+        for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
+            rejectChain = rejectChain.catch(async () => {
+                let cmdChain = Promise.resolve();
+
+                for (let cmdCount = 0; cmdCount < parsedSettings.length; cmdCount++) {
+                    // Run discovery if the first attempt has failed and this is the first command in the sequence
+                    // Prevents running discovery before every command in a sequence.
+                    let forceDiscovery: boolean = attempt != 0 && cmdCount == 0;
+                    cmdChain = cmdChain
+                        // Attach the next command in the sequence
+                        .then(() => this.handle(forceDiscovery, sequence[cmdCount].Lights, sequence[cmdCount], parsedSettings[cmdCount]))
+                        // Delay to allow command to finish + a little extra.
+                        .then(() => this.happyDelay("Allow command duration", sequence[cmdCount].Duration + 500));
+                }
+
+                return await cmdChain;
+            });
+            rejectChain = rejectChain.catch(this.angryDelay);
         }
 
         // Give back the result from above
@@ -55,19 +76,18 @@ export class LifxWrapper {
 
     /**
      * Parses the new light settings described in settings and updates the lights.
-     * @param attempt The number of attempts previously tried to invoke the commands.
+     * @param forceDiscovery Should we attempt discovery before sending the command.
      * @param settings New light settings.
      * @param details Settings parameter converted to node-lifx-lan readable obj format.
      */
-    private async updateLights(attempt: number, settings: LifxCommand, details: any): Promise<void> {
+    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand, details: any): Promise<void> {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
-        if (this.lightsDiscovered(settings.Lights) && attempt == 0) {
-            // Assume lights are known and no discovery necessary if the lights are in the known list and this is the first attempt.
-            discover = Promise.resolve();
-        } else {
-            // Attempt discovery in any lights are missing or we've failed more than once.
+        if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
             discover = this._lifx.discover().then(this.printDiscovery);
+        } else {
+            // No reason to run
+            discover = Promise.resolve();
         }
 
         let cmdName: string = 'UNKNOWN';
@@ -91,14 +111,17 @@ export class LifxWrapper {
         });
     }
 
-    /**
-     * Return a rejected promise that delays for a given time.
-     * @param reason 
-     */
-    private _delay(reason): Promise<void> {
-        console.log('Command failed, setting delay of 1s before retry.');
+    private happyDelay(reason: string, delay: number = 1000): Promise<void> {
+        console.log(`Provided delay of ${delay}ms.`);
         return new Promise(function (resolve, reject) {
-            setTimeout(reject.bind(null, reason), 1000);
+            setTimeout(resolve.bind(null, reason), delay);
+        });
+    }
+
+    private angryDelay(reason: string, delay: number = 1000): Promise<void> {
+        console.log(`Command failed. Setting delay of ${delay}ms.`);
+        return new Promise(function (resolve, reject) {
+            setTimeout(reject.bind(null, reason), delay);
         });
     }
 
@@ -115,18 +138,7 @@ export class LifxWrapper {
     public printDiscovery(device_list: any[]) {
         console.log('New discovery attempted!')
         device_list.forEach((device) => {
-            if (device['deviceInfo']['label'] == 'Office One') {
-                _officeOne = device;
-            }
-            if (device['deviceInfo']['label'] == 'Office Two') {
-                _officeTwo = device;
-            }
-            if (device['deviceInfo']['label'] == 'Office Three') {
-                _officeThree = device;
-            }
-
             console.log([device['ip'], device['mac'], device['deviceInfo']['label']].join(' | '));
         });
-        console.log('\n');
     }
 }
