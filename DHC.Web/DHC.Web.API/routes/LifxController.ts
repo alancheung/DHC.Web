@@ -6,11 +6,12 @@ import { LifxCommand } from '../LIFX/LifxCommand';
 const LightManager: LifxWrapper = new LifxWrapper();
 
 /** Router responsible for all requests relating to project/todo controls. */
-const projectRouter = express.Router();
+const lifxRouter = express.Router();
 
 // Register routes
 const root: string = '/';
-projectRouter.post(`${root}`, controlLight);
+lifxRouter.post(root, controlLight);
+lifxRouter.post(`/sequence`, sequenceControl);
 
 /**
  * ROUTE: POST ./lifx
@@ -20,9 +21,19 @@ projectRouter.post(`${root}`, controlLight);
  */
 async function controlLight(req: Request, resp: Response) {
     let settings: LifxCommand = new LifxCommand(req.body);
-    return await LightManager.handle(settings)
+    return await LightManager.sendCommand(settings)
         .then(() => resp.status(200).send())
-        .catch((err) => resp.status(500).send());
+        .catch((err) => resp.status(500).send(err));
 }
 
-export default projectRouter;
+async function sequenceControl(req: Request, resp: Response) {
+    let commands: any[] = req.body;
+    let sequence: LifxCommand[] = commands.map(c => new LifxCommand(c));
+    return await LightManager.sendSequence(sequence)
+        .then(() => resp.status(200).send())
+        .catch((err) => resp.status(500).send(err));
+}
+
+
+
+export default lifxRouter;
