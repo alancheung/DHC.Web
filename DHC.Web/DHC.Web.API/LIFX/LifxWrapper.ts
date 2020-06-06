@@ -45,6 +45,7 @@ export class LifxWrapper {
     public async sendSequence(sequence: LifxCommand[]): Promise<void> {
         let parsedSettings: any[] = sequence.map(cmd => cmd.convertToLifxLanFilter());
         console.log(`Parsed library light settings: ${JSON.stringify(parsedSettings)}`);
+        let allInvolvedLights: any = this.getInvolvedLights(sequence);
 
         // Attempt commands with delay!
         let rejectChain: Promise<void> = Promise.reject();
@@ -58,7 +59,7 @@ export class LifxWrapper {
                     let forceDiscovery: boolean = attempt != 0 && cmdCount == 0;
                     cmdChain = cmdChain
                         // Attach the next command in the sequence
-                        .then(() => this.handle(forceDiscovery, sequence[cmdCount].Lights, sequence[cmdCount], parsedSettings[cmdCount]))
+                        .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence[cmdCount], parsedSettings[cmdCount]))
                         // Delay to allow command to finish + a little extra.
                         .then(() => this.happyDelay("Allow command duration", sequence[cmdCount].Duration + 500));
                 }
@@ -140,5 +141,10 @@ export class LifxWrapper {
         device_list.forEach((device) => {
             console.log([device['ip'], device['mac'], device['deviceInfo']['label']].join(' | '));
         });
+    }
+
+    public getInvolvedLights(sequence: LifxCommand[]): string[] {
+        let lightNames: string[] = [].concat.apply([], sequence.map(cmd => cmd.Lights));
+        return lightNames;
     }
 }
