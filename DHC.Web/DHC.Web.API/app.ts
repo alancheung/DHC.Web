@@ -17,7 +17,6 @@ import cors = require('cors');
 
 import routes from './routes/index';
 import PortalAccessController from './routes/PortalAccessController';
-import ProjectController from './routes/ProjectController';
 import SensorController from './routes/SensorController';
 import LifxController from './routes/LifxController';
 
@@ -34,7 +33,6 @@ app.use(cors());
 // Define routes and controllers here
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
-app.use('/project', ProjectController);
 app.use('/api/portal', PortalAccessController);
 app.use('/api/sensor', SensorController);
 app.use('/api/lifx', LifxController);
