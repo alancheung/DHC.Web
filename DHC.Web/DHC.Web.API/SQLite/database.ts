@@ -27,7 +27,7 @@ class DhcDatabaseContext {
                 this._db.run(new PortalAccess(null).createTable().command, (err) => this.reportStatus(err, PortalAccess.name, 'seed'));
                 this._db.run(new SensorReading(null).createTable().command, err => this.reportStatus(err, SensorReading.name, 'seed'));
                 this._db.run(new Log(null).createTable().command, err => this.reportStatus(err, Log.name, 'seed'));
-                console.log('Database Tables created created!');
+                console.log('Database Tables created!');
 
                 setTimeout(() => {
                     // Create Indexes!
