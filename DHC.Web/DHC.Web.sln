@@ -4,8 +4,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DHC.Web.API", "DHC.Web.API\DHC.Web.API.njsproj", "{61D5C998-1D27-4F64-AECD-DCB0FF86DC25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18B71245-ECD2-4285-9A09-332A017E28C8} = {18B71245-ECD2-4285-9A09-332A017E28C8}
+	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DHC.Web.Client", "DHC.Web.Client\DHC.Web.Client.njsproj", "{076A9DC3-E5AA-4E72-BDD8-6600B86E9306}"
+	ProjectSection(ProjectDependencies) = postProject
+		{18B71245-ECD2-4285-9A09-332A017E28C8} = {18B71245-ECD2-4285-9A09-332A017E28C8}
+	EndProjectSection
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "DHC.Web.Common", "DHC.Web.Common\DHC.Web.Common.njsproj", "{18B71245-ECD2-4285-9A09-332A017E28C8}"
 EndProject
