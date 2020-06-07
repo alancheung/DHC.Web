@@ -11,9 +11,9 @@ export class LifxWrapper {
     private _maxAttempts: number = 3;
 
     constructor() {
-        this._lifx.discover().then(this.printDiscovery).catch((error) => {
-            console.error(error);
-        });
+        //this._lifx.discover().then(this.printDiscovery).catch((error) => {
+        //    console.error(error);
+        //});
     }
 
     /**

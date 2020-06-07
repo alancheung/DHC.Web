@@ -33,7 +33,7 @@
   <ItemGroup>
     <None Include="app.ts" />
     <None Include="routes\index.ts" />
-    <None Include="routes\PortalController.ts" />
+    <None Include="routes\PortalAccessController.ts" />
     <Content Include="tsconfig.json" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
@@ -73,9 +73,6 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="routes\SensorController.ts" />
-    <TypeScriptCompile Include="routes\ProjectController.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\Database.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

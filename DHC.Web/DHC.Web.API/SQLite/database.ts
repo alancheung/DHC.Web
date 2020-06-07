@@ -1,5 +1,5 @@
 import { ApplicationSettings } from "../config/appconfig";
-import { AccessLog, Project, Todo, SensorReading, Log } from '../../DHC.Web.Common/SQLite/tables';
+import { SensorReading, Log, PortalAccess } from '../../DHC.Web.Common/SQLite/tables';
 import { nameof } from "../../DHC.Web.Common/functions";
 
 let sqlite3 = require('sqlite3').verbose();
@@ -24,9 +24,7 @@ class DhcDatabaseContext {
                 throw err;
             } else {
                 console.log('Connected to the SQLite database.');
-                this._db.run(new AccessLog(null).createTable().command, (err) => this.reportStatus(err, AccessLog.name, 'seed'));
-                this._db.run(new Project(null).createTable().command, (err) => this.reportStatus(err, Project.name, 'seed'));
-                this._db.run(new Todo(null).createTable().command, (err) => this.reportStatus(err, Todo.name, 'seed'));
+                this._db.run(new PortalAccess(null).createTable().command, (err) => this.reportStatus(err, PortalAccess.name, 'seed'));
                 this._db.run(new SensorReading(null).createTable().command, err => this.reportStatus(err, SensorReading.name, 'seed'));
                 this._db.run(new Log(null).createTable().command, err => this.reportStatus(err, Log.name, 'seed'));
                 console.log('Database Tables created created!');
@@ -34,8 +32,7 @@ class DhcDatabaseContext {
                 setTimeout(() => {
                     // Create Indexes!
                     console.log('Creating indexes after sleeping 1 second!');
-                    this._db.run(this.createLatestIndex('LatestEventTime', AccessLog.name, nameof<AccessLog>("EventTime")), err => this.reportStatus(err, AccessLog.name, 'INDEX LatestEventTime'));
-                    this._db.run(this.createLatestIndex('WipTodo', Todo.name, nameof<Todo>("EndDate")), err => this.reportStatus(err, Todo.name, 'INDEX WipTodo'));
+                    this._db.run(this.createLatestIndex('LatestPortalAccess', PortalAccess.name, nameof<PortalAccess>("StartDate")), err => this.reportStatus(err, PortalAccess.name, 'INDEX LatestPortalAccess'));
                 }, 1000);
             }
         });

@@ -38,6 +38,7 @@
   <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="SQLite\" />
+    <Folder Include="SQLite\tables\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="functions.ts">
@@ -51,6 +52,27 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\PortalAccess.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\Log.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\Project.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\SensorInfo.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\SensorReading.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\Todo.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\VersionHistory.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
   </ItemGroup>

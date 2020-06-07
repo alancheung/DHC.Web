@@ -7,7 +7,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './modules/app-routing.module';
 import { DoorsComponent } from './components/doors/doors.component';
 import { IndexComponent } from './components/index/index.component';
-import { ProjectComponent } from './components/project/project.component';
 import { SensorComponent } from './components/sensor/sensor.component';
 import { LoadingDirective } from './directives/loading/loading.directive';
 import { LoadingComponent } from './directives/loading/loading.component';
@@ -17,7 +16,6 @@ import { LoadingComponent } from './directives/loading/loading.component';
     AppComponent,
     DoorsComponent,
     IndexComponent,
-    ProjectComponent,
     SensorComponent,
     LoadingDirective,
     LoadingComponent

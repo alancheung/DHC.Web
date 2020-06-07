@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InformationLoaderComponent } from '../information-loader';
 import { DhcPortalApiService } from '../../services/dhc-log-portal.service';
-import { AccessLog } from '../../../../../DHC.Web.Common/SQLite/tables';
+import { PortalAccess } from '../../../../../DHC.Web.Common/SQLite/tables';
 
 @Component({
   selector: 'app-doors',
@@ -29,7 +29,7 @@ export class DoorsComponent extends InformationLoaderComponent implements OnInit
     this.api.getLogForPortal(portalName)
       .subscribe((data: any[]) => {
       this.loading = false;
-      this.logs = data.map(d => new AccessLog(d));
+      this.logs = data.map(d => new PortalAccess(d));
       this.latestRecord = portalName == '' ? undefined : this.logs[0];
     }, err => {
       this.loading = false;

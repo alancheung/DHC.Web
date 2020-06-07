@@ -1,3 +1,6 @@
+import { nameof } from "../functions";
+
+/** Wrapper object describing a SQL command with optional parameters. */
 export class SqlCommand {
     public command: string;
     public parameters: any[];
@@ -23,6 +26,7 @@ export interface SqliteTable {
     validate(): boolean;
 }
 
+/** Base implementation of a DHC SQLite database table. Provides default field 'ID' */
 export abstract class DatabaseTable implements SqliteTable {
     ID: number;
 
@@ -35,12 +39,12 @@ export abstract class DatabaseTable implements SqliteTable {
     abstract createTable(): SqlCommand;
     abstract insert(): SqlCommand;
 
-    /** TODO Add for all tables */
     public validate(): boolean {
         return true;
     }
 }
 
+/** Definition of a DHC SQLite table that implements datetime fields. */
 export abstract class DateTable extends DatabaseTable {
     public StartDate: Date;
     public EndDate: Date;
@@ -57,6 +61,14 @@ export abstract class DateTable extends DatabaseTable {
     }
     insert(): SqlCommand {
         throw new Error("Method should be implemented by child.");
+    }
+
+    /**
+     * Return the SQLite table definition for a date, defaulted to CURRENT_TIMESTAMP.
+     * @param columnName
+     */
+    protected DefineDateTimeTable(columnName: string): string {
+        return `${columnName} TEXT DEFAULT CURRENT_TIMESTAMP`
     }
 
     /**

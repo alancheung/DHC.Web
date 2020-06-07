@@ -16,7 +16,7 @@ import parser = require('body-parser');
 import cors = require('cors');
 
 import routes from './routes/index';
-import LogController from './routes/PortalController';
+import PortalAccessController from './routes/PortalAccessController';
 import ProjectController from './routes/ProjectController';
 import SensorController from './routes/SensorController';
 import LifxController from './routes/LifxController';
@@ -35,7 +35,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/project', ProjectController);
-app.use('/api/portal', LogController);
+app.use('/api/portal', PortalAccessController);
 app.use('/api/sensor', SensorController);
 app.use('/api/lifx', LifxController);
 

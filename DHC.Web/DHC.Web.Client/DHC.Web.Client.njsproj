@@ -40,7 +40,6 @@
     <Folder Include="src\app\components\" />
     <Folder Include="src\app\components\doors\" />
     <Folder Include="src\app\components\index\" />
-    <Folder Include="src\app\components\project\" />
     <Folder Include="src\app\components\sensor\" />
     <Folder Include="src\app\directives\loading\" />
     <Folder Include="src\app\modules\" />
@@ -85,8 +84,6 @@
     <Content Include="src\app\components\doors\doors.component.html" />
     <Content Include="src\app\components\index\index.component.css" />
     <Content Include="src\app\components\index\index.component.html" />
-    <Content Include="src\app\components\project\project.component.css" />
-    <Content Include="src\app\components\project\project.component.html" />
     <Content Include="src\app\components\sensor\sensor.component.css" />
     <Content Include="src\app\components\sensor\sensor.component.html" />
     <Content Include="src\app\directives\loading\loading.component.css" />
@@ -107,7 +104,6 @@
     <TypeScriptCompile Include="src\app\components\doors\doors.component.ts" />
     <TypeScriptCompile Include="src\app\components\index\index.component.ts" />
     <TypeScriptCompile Include="src\app\components\information-loader.ts" />
-    <TypeScriptCompile Include="src\app\components\project\project.component.ts" />
     <TypeScriptCompile Include="src\app\components\sensor\sensor.component.ts" />
     <TypeScriptCompile Include="src\app\directives\loading\loading.component.ts" />
     <TypeScriptCompile Include="src\app\directives\loading\loading.directive.ts" />
@@ -115,9 +111,6 @@
     <TypeScriptCompile Include="src\app\services\dhc-api.service.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-sensor-api.service.ts" />
     <TypeScriptCompile Include="src\app\services\dhc-log-portal.service.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Include="src\app\services\dhc-project-api.service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\environments\appconfig.ts" />
