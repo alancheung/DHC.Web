@@ -5,6 +5,8 @@ export enum VersionHistoryModules {
 }
 
 export enum SensorReadingType {
+    Unknown,
+    Test,
     Temperature,
     Humidity,
     SoilMoisture,
