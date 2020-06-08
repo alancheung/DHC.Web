@@ -18,15 +18,20 @@ export class PortalAccess extends DateTable {
             ${nameof<PortalAccess>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${nameof<PortalAccess>("Name")} TEXT,
             ${nameof<PortalAccess>("State")} INTEGER,
-            ${nameof<PortalAccess>("StartDate")} TEXT NOT NULL)`;
+            ${this.DefineDateTimeColumn(nameof<PortalAccess>("StartDate"), true)})`;
 
         return new SqlCommand(seed, []);
     }
 
     insert(): SqlCommand {
         return new SqlCommand(`INSERT INTO ${PortalAccess.name} 
-            (${nameof<PortalAccess>("Name")}, ${nameof<PortalAccess>("State")}, ${nameof<PortalAccess>("StartDate")}) 
-            VALUES (?,?,?)`,
-            [this.Name, this.State, this.StartDate.toLocaleString()]);
+            (${nameof<PortalAccess>("Name")}, ${nameof<PortalAccess>("State")}) 
+            VALUES (?,?)`,
+            [this.Name, this.State]);
     }
+
+    validate(): boolean {
+        return !!this.Name;
+    }
+    
 }

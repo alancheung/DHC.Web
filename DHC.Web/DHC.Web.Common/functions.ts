@@ -11,7 +11,10 @@ export function isbooleantrue(obj: any) {
         return obj === 1;
     }
     else if (typeof (obj) === 'string') {
-        return obj === 'True' || obj === 'true' || obj === 'yes' || obj === '1';
+        return obj.toLowerCase() === 'true'
+            || obj.toLowerCase() === 'yes'
+            || obj.toLowerCase() === 'open'
+            || obj === '1';
     } else {
         return false;
     }

@@ -3,7 +3,7 @@ import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { SqlCommand } from '../../DHC.Web.Common/SQLite/context';
 import { PortalAccess } from '../../DHC.Web.Common/SQLite/tables';
-import { nameof, isbooleantrue, mapTo, mapResults } from '../../DHC.Web.Common/functions';
+import { nameof, isbooleantrue, mapResults } from '../../DHC.Web.Common/functions';
 
 // Register routes
 const router = express.Router();
@@ -36,24 +36,19 @@ function getRoot(req: Request, resp: Response): void {
  * @param resp Express Response object.
  */
 function postRoot(req: Request, resp: Response): void {
-    let logEntry: PortalAccess;
-    if (req.body.name && req.body.state && req.body.eventtime) {
-        logEntry = req.body;
-    } else {
-        logEntry = new PortalAccess(req.body);
-        logEntry.Name = req.body.Name;
-        logEntry.State = isbooleantrue(req.body.State);
-        logEntry.StartDate = req.body.StartDate || new Date();
+    let accessEvent: PortalAccess = new PortalAccess(req.body);
+    if (!accessEvent.validate()) {
+        resp.status(400).send("Portal access event was not valid.");
     }
 
-    let insert: SqlCommand = logEntry.insert();
+    let insert: SqlCommand = accessEvent.insert();
     DhcDatabase.Context.run(insert.command, insert.parameters, (err, data: any[]) => {
         if (err) {
             console.log(err);
             resp.status(500).json(err);
         } else {
-            console.log(`Inserted new ${logEntry.State ? 'open' : 'close'} record for ${logEntry.Name} at ${logEntry.StartDate.toLocaleString()}`);
-            resp.status(200).json(mapResults(PortalAccess, data));
+            console.log(`Inserted new ${accessEvent.State ? 'open' : 'close'} record for ${accessEvent.Name} at ${accessEvent.StartDate.toLocaleString()}`);
+            resp.status(200).json(accessEvent);
         }
     });
 }
@@ -66,7 +61,6 @@ function postRoot(req: Request, resp: Response): void {
  */
 function getLogsForName(req: Request, resp: Response): void {
     let searchName = `%${req.params.name}%`;
-
     let sqlCommand = `SELECT * FROM ${PortalAccess.name} WHERE ${nameof<PortalAccess>('Name')} LIKE ? ORDER BY ${nameof<PortalAccess>('StartDate')} DESC`;
 
     DhcDatabase.Context.all(sqlCommand, searchName, (err, data: PortalAccess[]) => {
