@@ -15,7 +15,7 @@ lifxRouter.post(`/sequence`, sequenceControl);
 
 /**
  * ROUTE: POST ./lifx
- * Add the object in the request body to the database.
+ * Send the command to the lights specified to run all at once.
  * @param req Express Request object.
  * @param resp Express Response object.
  */
@@ -26,6 +26,12 @@ async function controlLight(req: Request, resp: Response) {
         .catch((err) => resp.status(500).send(err));
 }
 
+/**
+ * ROUTE: POST ./lifx/sequence
+ * Send the command to the lights specified to run in a sequence with delay=duration.
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
 async function sequenceControl(req: Request, resp: Response) {
     let commands: any[] = req.body;
     let sequence: LifxCommand[] = commands.map(c => new LifxCommand(c));
