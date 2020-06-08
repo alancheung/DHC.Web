@@ -60,7 +60,6 @@ class DhcDatabaseContext {
     private createLatestIndex(indexName: string, table: string, column: string): string {
         return `CREATE INDEX IF NOT EXISTS "${indexName}" ON "${table}" ("${column}" DESC)`;
     }
-
 }
 
 let DhcDatabase = new DhcDatabaseContext();

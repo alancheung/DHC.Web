@@ -1,7 +1,7 @@
 import express = require('express');
 import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
-import { nameof } from '../../DHC.Web.Common/functions';
+import { nameof, mapResults } from '../../DHC.Web.Common/functions';
 
 import { SqlCommand } from '../../DHC.Web.Common/SQLite/context';
 import { SensorReading } from '../../DHC.Web.Common/SQLite/tables';
@@ -20,7 +20,7 @@ function getSensorLocations(req: Request, resp: Response): void {
             console.log(err);
             resp.json(err);
         } else {
-            resp.json(data);
+            resp.json(mapResults(SensorReading, data));
         }
     });
 }
@@ -32,7 +32,7 @@ function getReadingsForLocation(req: Request, resp: Response): void {
                 console.log(err);
                 resp.json(err);
             } else {
-                resp.json(data);
+                resp.json(mapResults(SensorReading, data));
             }
         });
 }
@@ -49,13 +49,13 @@ function getRoot(req: Request, resp: Response): void {
         FROM ${SensorReading.name} WHERE ${nameof<SensorReading>("StartDate")} 
         BETWEEN datetime('now', '-1 day') AND datetime('now', '+1 day')
         ORDER BY ${nameof<SensorReading>("ID")} DESC 
-        LIMIT 300`, 
-        (err, data: SensorReading[]) => {
+        LIMIT 300`,
+        (err, data: any[]) => {
             if (err) {
                 console.log(err);
                 resp.json(err);
             } else {
-                resp.json(data.map(m => new SensorReading(m)));
+                resp.json(mapResults(SensorReading, data));
             }
     });
 }
@@ -84,5 +84,3 @@ function postRoot(req: Request, resp: Response): void {
         }
     });
 }
-
-export default router;
