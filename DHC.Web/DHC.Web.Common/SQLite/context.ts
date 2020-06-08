@@ -1,5 +1,3 @@
-import { nameof } from "../functions";
-
 /** Wrapper object describing a SQL command with optional parameters. */
 export class SqlCommand {
     public command: string;
@@ -63,12 +61,16 @@ export abstract class DateTable extends DatabaseTable {
         throw new Error("Method should be implemented by child.");
     }
 
+    protected localTimeTimestamp(columnName: string = 'CURRENT_TIMESTAMP'): string {
+        return `datetime(${columnName}, 'localtime')`;
+    }
     /**
      * Return the SQLite table definition for a date, defaulted to CURRENT_TIMESTAMP.
-     * @param columnName
+     * @param columnName Name of the column
+     * @param required Set display of 'NOT NULL' modifier
      */
-    protected DefineDateTimeTable(columnName: string): string {
-        return `${columnName} TEXT DEFAULT CURRENT_TIMESTAMP`
+    protected DefineDateTimeColumn(columnName: string, required: boolean): string {
+        return `${columnName} TEXT ${required ? 'NOT NULL' : ''} DEFAULT CURRENT_TIMESTAMP`
     }
 
     /**
@@ -78,13 +80,15 @@ export abstract class DateTable extends DatabaseTable {
      */
     public parseDates(start: string, end: string): void {
         if (start) {
-            this.StartDate = new Date(start);
+            // Need to append UTC to allow typescript to convert to local datetime
+            // https://stackoverflow.com/questions/6525538/convert-utc-date-time-to-local-date-time
+            this.StartDate = new Date(start + ' UTC');
         } else {
             this.StartDate = new Date();
         }
 
         if (end) {
-            this.EndDate = new Date(end);
+            this.EndDate = new Date(end + ' UTC');
         }
     }
 }
