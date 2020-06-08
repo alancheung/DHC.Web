@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
+    <Folder Include="models\definitions\" />
     <Folder Include="SQLite\" />
     <Folder Include="SQLite\tables\" />
   </ItemGroup>
