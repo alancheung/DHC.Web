@@ -32,7 +32,7 @@ export class SensorReading extends DateTable {
     createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${SensorReading.name} (
             ${nameof<SensorReading>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${nameof<SensorReading>("StartDate")} TEXT NOT NULL,
+            ${this.DefineDateTimeColumn(nameof<SensorReading>("StartDate"), true)},
             ${nameof<SensorReading>("SourceHostName")} TEXT NOT NULL,
             ${nameof<SensorReading>("Location")} TEXT NOT NULL,
             ${nameof<SensorReading>("SensorModel")} TEXT NOT NULL,
@@ -45,16 +45,14 @@ export class SensorReading extends DateTable {
     insert(): SqlCommand {
         let insert = `INSERT INTO ${SensorReading.name} 
             (
-                ${nameof<SensorReading>("StartDate")}, 
                 ${nameof<SensorReading>("SourceHostName")}, 
                 ${nameof<SensorReading>("Location")}, 
                 ${nameof<SensorReading>("SensorModel")}, 
                 ${nameof<SensorReading>("ReadingType")}, 
                 ${nameof<SensorReading>("ReadingValue")}
-            ) VALUES (?,?,?,?,?,?)`;
+            ) VALUES (?,?,?,?,?)`;
 
         return new SqlCommand(insert, [
-            this.StartDate.toLocaleString(),
             this.SourceHostName,
             this.Location,
             this.SensorModel,

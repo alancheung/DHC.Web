@@ -44,13 +44,19 @@ function getReadingsForLocation(req: Request, resp: Response): void {
  * @param resp Express Response object.
  */
 function getRoot(req: Request, resp: Response): void {
-    DhcDatabase.Context.all(`SELECT * FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("ID")} DESC LIMIT 300`, (err, data: SensorReading[]) => {
-        if (err) {
-            console.log(err);
-            resp.json(err);
-        } else {
-            resp.json(data);
-        }
+    DhcDatabase.Context.all(
+        `SELECT * 
+        FROM ${SensorReading.name} WHERE ${nameof<SensorReading>("StartDate")} 
+        BETWEEN datetime('now', '-1 day') AND datetime('now', '+1 day')
+        ORDER BY ${nameof<SensorReading>("ID")} DESC 
+        LIMIT 300`, 
+        (err, data: SensorReading[]) => {
+            if (err) {
+                console.log(err);
+                resp.json(err);
+            } else {
+                resp.json(data.map(m => new SensorReading(m)));
+            }
     });
 }
 
