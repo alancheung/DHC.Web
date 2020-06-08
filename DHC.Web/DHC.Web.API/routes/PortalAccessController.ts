@@ -3,7 +3,7 @@ import { DhcDatabase } from '../SQLite/database';
 import { Request, Response } from 'express';
 import { SqlCommand } from '../../DHC.Web.Common/SQLite/context';
 import { PortalAccess } from '../../DHC.Web.Common/SQLite/tables';
-import { nameof, isbooleantrue } from '../../DHC.Web.Common/functions';
+import { nameof, isbooleantrue, mapTo, mapResults } from '../../DHC.Web.Common/functions';
 
 // Register routes
 const router = express.Router();
@@ -19,10 +19,13 @@ router.get(`${root}:name`, getLogsForName);
  * @param resp Express Response object.
  */
 function getRoot(req: Request, resp: Response): void {
-    DhcDatabase.Context.all(`SELECT date('1591568712058', 'unixepoch', 'localtime')`,
-        (err, data: any[]) => {
-        if (err) console.log(err);
-        resp.json(data);
+    DhcDatabase.Context.all(`SELECT * FROM ${PortalAccess.name}`, (err, data: any[]) => {
+        if (err) {
+            console.log(err);
+            resp.status(500).json(err);
+        } else {
+            resp.status(200).json(mapResults(PortalAccess, data));
+        }
     });
 }
 
@@ -44,12 +47,13 @@ function postRoot(req: Request, resp: Response): void {
     }
 
     let insert: SqlCommand = logEntry.insert();
-    DhcDatabase.Context.run(insert.command, insert.parameters, (err, data) => {
+    DhcDatabase.Context.run(insert.command, insert.parameters, (err, data: any[]) => {
         if (err) {
+            console.log(err);
             resp.status(500).json(err);
         } else {
             console.log(`Inserted new ${logEntry.State ? 'open' : 'close'} record for ${logEntry.Name} at ${logEntry.StartDate.toLocaleString()}`);
-            resp.status(200).json(data);
+            resp.status(200).json(mapResults(PortalAccess, data));
         }
     });
 }
@@ -66,9 +70,12 @@ function getLogsForName(req: Request, resp: Response): void {
     let sqlCommand = `SELECT * FROM ${PortalAccess.name} WHERE ${nameof<PortalAccess>('Name')} LIKE ? ORDER BY ${nameof<PortalAccess>('StartDate')} DESC`;
 
     DhcDatabase.Context.all(sqlCommand, searchName, (err, data: PortalAccess[]) => {
-        if (err) console.log(err);
-        data = data.map(d => new PortalAccess(d));
-        resp.json(data);
+        if (err) {
+            console.log(err);
+            resp.status(500).json(err);
+        } else {
+            resp.status(200).json(mapResults(PortalAccess, data));
+        }
     });
 }
 

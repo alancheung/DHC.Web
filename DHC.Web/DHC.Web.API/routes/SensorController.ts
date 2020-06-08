@@ -16,12 +16,12 @@ router.post('/', postRoot);
 function getSensorLocations(req: Request, resp: Response): void {
     DhcDatabase.Context.all(`SELECT DISTINCT(${nameof<SensorReading>("Location")}) FROM ${SensorReading.name} ORDER BY ${nameof<SensorReading>("Location")}`,
         (err, data: SensorReading[]) => {
-        if (err) {
-            console.log(err);
-            resp.json(err);
-        } else {
-            resp.json(mapResults(SensorReading, data));
-        }
+            if (err) {
+                console.log(err);
+                resp.status(500).json(err);
+            } else {
+                resp.status(200).json(mapResults(SensorReading, data));
+            }
     });
 }
 
@@ -30,9 +30,9 @@ function getReadingsForLocation(req: Request, resp: Response): void {
         (err, data: SensorReading[]) => {
             if (err) {
                 console.log(err);
-                resp.json(err);
+                resp.status(500).json(err);
             } else {
-                resp.json(mapResults(SensorReading, data));
+                resp.status(200).json(mapResults(SensorReading, data));
             }
         });
 }
@@ -53,9 +53,9 @@ function getRoot(req: Request, resp: Response): void {
         (err, data: any[]) => {
             if (err) {
                 console.log(err);
-                resp.json(err);
+                resp.status(500).json(err);
             } else {
-                resp.json(mapResults(SensorReading, data));
+                resp.status(200).json(mapResults(SensorReading, data));
             }
     });
 }
@@ -77,6 +77,7 @@ function postRoot(req: Request, resp: Response): void {
     let insert: SqlCommand = reading.insert();
     DhcDatabase.Context.run(insert.command, insert.parameters, (err, data) => {
         if (err) {
+            console.log(err);
             resp.status(500).json(err);
         } else {
             console.log(`${new Date().toLocaleString()}: Recorded ${reading.ReadingType} from ${reading.SourceHostName}:${reading.SensorModel} of ${reading.ReadingValue}`);
@@ -84,3 +85,5 @@ function postRoot(req: Request, resp: Response): void {
         }
     });
 }
+
+export default router;
