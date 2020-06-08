@@ -58,9 +58,6 @@
     <TypeScriptCompile Include="SQLite\tables\PortalAccess.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="SQLite\tables\Log.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\Project.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
