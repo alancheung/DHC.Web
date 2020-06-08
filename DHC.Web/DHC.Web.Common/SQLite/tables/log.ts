@@ -28,7 +28,7 @@ export class Log extends DateTable {
     createTable(): SqlCommand {
         let seed = `CREATE TABLE IF NOT EXISTS ${Log.name} (
             ${nameof<Log>("ID")} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${nameof<Log>("StartDate")} TEXT NOT NULL,
+            ${this.DefineDateTimeColumn(nameof<Log>("StartDate"), true)},
             ${nameof<Log>("Category")} INTEGER,
             ${nameof<Log>("Message")} TEXT,
             ${nameof<Log>("Application")} TEXT,
@@ -39,8 +39,8 @@ export class Log extends DateTable {
 
     insert(): SqlCommand {
         return new SqlCommand(`INSERT INTO ${Log.name} 
-            (${nameof<Log>("StartDate")}, ${nameof<Log>("Category")}, ${nameof<Log>("Message")}, ${nameof<Log>("Application")}, ${nameof<Log>("Source")}) 
-            VALUES (?,?,?,?,?)`,
-            [this.StartDate.toLocaleString(), this.Category, this.Message, this.Application, this.Source]);
+            (${nameof<Log>("Category")}, ${nameof<Log>("Message")}, ${nameof<Log>("Application")}, ${nameof<Log>("Source")}) 
+            VALUES (?,?,?,?)`,
+            [this.Category, this.Message, this.Application, this.Source]);
     }
 }
