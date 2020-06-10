@@ -1,5 +1,11 @@
+<div class="container">
+  <div class="light-group btn-group" role="group">
+    <button type="button" class="btn btn-md btn-warning" (click)="discover()">Discover</button>
+  </div>
+</div>
+
 <div class="container" *loading="loading">
-  <div class="btn-group" role="group">
-    <button *ngFor="let loc of sensorLocations" type="button" class="btn btn-md btn-primary" (click)="loadReadingsFor(loc.Location)">{{loc.Location}}</button>
+  <div class="light-group btn-group" role="group">
+    <button *ngFor="let light of KnownLights" type="button" class="btn btn-md btn-primary">{{light.LightName}}</button>
   </div>
 </div>
