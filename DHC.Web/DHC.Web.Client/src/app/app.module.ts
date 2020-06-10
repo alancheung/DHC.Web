@@ -10,6 +10,7 @@ import { IndexComponent } from './components/index/index.component';
 import { SensorComponent } from './components/sensor/sensor.component';
 import { LoadingDirective } from './directives/loading/loading.directive';
 import { LoadingComponent } from './directives/loading/loading.component';
+import { LifxComponent } from './components/lifx/lifx.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { LoadingComponent } from './directives/loading/loading.component';
     IndexComponent,
     SensorComponent,
     LoadingDirective,
-    LoadingComponent
+    LoadingComponent,
+    LifxComponent
   ],
   imports: [
     BrowserModule,
