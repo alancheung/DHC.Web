@@ -1,11 +1,13 @@
-<div class="container">
+<div class="container" *loading="loading">
   <div class="light-group btn-group" role="group">
     <button type="button" class="btn btn-md btn-warning" (click)="discover()">Discover</button>
+    <button *ngFor="let light of KnownLights" type="button" class="btn btn-md btn-primary">{{light.LightName}}</button>
   </div>
 </div>
 
-<div class="container" *loading="loading">
-  <div class="light-group btn-group" role="group">
-    <button *ngFor="let light of KnownLights" type="button" class="btn btn-md btn-primary">{{light.LightName}}</button>
-  </div>
+<div class="col-md-3">
+  <span [style.background]="arrayColors[selectedColor]"
+        [cpToggle]="true"
+        [cpDialogDisplay]="'inline'"
+        [(colorPicker)]="arrayColors[selectedColor]"></span>
 </div>

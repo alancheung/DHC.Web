@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './modules/app-routing.module';
@@ -27,6 +28,7 @@ import { LifxComponent } from './components/lifx/lifx.component';
     HttpClientModule,
     AppRoutingModule,
     MatProgressSpinnerModule,
+    ColorPickerModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
