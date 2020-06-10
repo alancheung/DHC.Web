@@ -1,8 +1,7 @@
 import express = require('express');
 import { Request, Response } from 'express';
 import { LifxWrapper } from '../LIFX/LifxWrapper';
-import { LifxCommand } from '../LIFX/LifxCommand';
-import { isbooleantrue } from '../../DHC.Web.Common/functions';
+import { LifxCommand } from '../../DHC.Web.Common/models/models';
 
 const LightManager: LifxWrapper = new LifxWrapper();
 
@@ -16,6 +15,20 @@ lifxRouter.post(`/sequence`, sequenceControl);
 
 lifxRouter.get('/discover', getDiscoveredLights);
 lifxRouter.post('/discover', runDiscovery);
+
+lifxRouter.get('/light/:name', getLightDetails);
+
+/**
+ * ROUTE: GET ./api/lifx/light/{name}
+ * Get the details of the light with the name={name}
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
+async function getLightDetails(req: Request, resp: Response) {
+    await LightManager.getDetail(req.params.name)
+        .then((detail) => resp.status(200).json(detail))
+        .catch((err) => resp.status(500).send(err));
+}
 
 /**
  * ROUTE: GET ./api/lifx/discover
@@ -46,7 +59,7 @@ async function runDiscovery(req: Request, resp: Response) {
  * @param resp Express Response object.
  */
 async function controlLight(req: Request, resp: Response) {
-    let settings: LifxCommand = new LifxCommand(req.body);
+    let settings: LifxCommand = new LifxCommand().configure(req.body);
     return await LightManager.sendCommand(settings)
         .then(() => resp.status(200).send())
         .catch((err) => resp.status(500).send(err));
@@ -60,7 +73,7 @@ async function controlLight(req: Request, resp: Response) {
  */
 async function sequenceControl(req: Request, resp: Response) {
     let commands: any[] = req.body;
-    let sequence: LifxCommand[] = commands.map(c => new LifxCommand(c));
+    let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c));
     return await LightManager.sendSequence(sequence)
         .then(() => resp.status(200).send())
         .catch((err) => resp.status(500).send(err));

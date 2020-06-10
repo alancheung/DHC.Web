@@ -1,3 +1,7 @@
 .light-group, .btn-group {
     padding: 15px;
 }
+
+.select-row > div {
+    padding-right: 15px;
+}

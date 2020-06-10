@@ -1,13 +1,49 @@
-<div class="container" *loading="loading">
-  <div class="light-group btn-group" role="group">
-    <button type="button" class="btn btn-md btn-warning" (click)="discover()">Discover</button>
-    <button *ngFor="let light of KnownLights" type="button" class="btn btn-md btn-primary">{{light.LightName}}</button>
+<div class="container lifx-wrapper">
+  <div class="row select-row">
+    <div class="col-md-3">
+      <div class="detail-panel" *loading="loadingDetails">
+        <span [style.background]="selectedColor"
+              [cpOutputFormat]="'hex'"
+              [cpToggle]="true"
+              [cpDialogDisplay]="'inline'"
+              [(colorPicker)]="selectedColor"></span>
+        <b>Light: </b>{{this.focusOn?.LightName || 'No light selected!'}}
+        <br />
+        <b>Output: </b>{{selectedColor}}
+        <br />
+        <b>HSB (HSV): </b>{{hsb}}
+      </div>
+    </div>
+    <div class="col-md-9">
+      <div class="row">
+        <div class="light-group btn-group" role="group" *loading="loading">
+          <button *ngFor="let light of KnownLights"
+                  type="button"
+                  class="btn btn-md btn-info"
+                  (click)="selectLight(light)">
+            {{light.LightName}}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="light-group btn-group" role="group">
+          <button type="button" class="btn btn-md"
+                  [ngClass]="{'btn-success': KnownLights.length >= 7, 'btn-warning': KnownLights.length < 7 && KnownLights.length > 0, 'btn-danger': KnownLights.length == 0}"
+                  (click)="discover()">
+            Discover
+          </button>
+        </div>
+        <div *ngIf="focusOn" class="light-group btn-group" role="group">
+          <button type="button" class="btn btn-md btn-{{focusOn?.State?.Power ? '' : 'outline-'}}primary"
+                  (click)="setPower()">
+            Power
+          </button>
+          <button type="button" class="btn btn-md btn-primary"
+                  (click)="updateColor()">
+            Color
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-<div class="col-md-3">
-  <span [style.background]="arrayColors[selectedColor]"
-        [cpToggle]="true"
-        [cpDialogDisplay]="'inline'"
-        [(colorPicker)]="arrayColors[selectedColor]"></span>
 </div>

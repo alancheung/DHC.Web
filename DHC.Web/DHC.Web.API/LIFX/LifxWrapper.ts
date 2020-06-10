@@ -1,5 +1,4 @@
-import { LifxCommand } from './LifxCommand';
-import { LightInfo } from '../../DHC.Web.Common/models/models';
+import { LightInfo, LifxCommand, LightState } from '../../DHC.Web.Common/models/models';
 const Lifx = require('node-lifx-lan');
 
 export class LifxWrapper {
@@ -111,7 +110,7 @@ export class LifxWrapper {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
         if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
-            discover = this._lifx.discover().then(this.handleDiscovery);
+            discover = this._lifx.discover().then((device_list) => this.handleDiscovery(device_list));
         } else {
             // No reason to run
             discover = Promise.resolve();
@@ -170,5 +169,19 @@ export class LifxWrapper {
     public getInvolvedLights(sequence: LifxCommand[]): string[] {
         let lightNames: string[] = [].concat.apply([], sequence.map(cmd => cmd.Lights));
         return lightNames;
+    }
+
+    /**
+     * Get specific details for the named light
+     * @param name
+     */
+    public getDetail(name: string): Promise<LightState> {
+        let device: any = this._lifx._device_list.find(device => device['deviceInfo']['label'] == name);
+
+        if (!device) {
+            throw Error(`'${name}' was not a known device. Run discover()?`)
+        }
+
+        return device.lightGet().then(info => new LightState(info));
     }
 }

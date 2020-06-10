@@ -69,9 +69,6 @@
     <TypeScriptCompile Include="routes\LifxController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="LIFX\LifxCommand.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
     <TypeScriptCompile Include="routes\SensorController.ts" />
     <TypeScriptCompile Include="SQLite\Database.ts">
       <SubType>Code</SubType>

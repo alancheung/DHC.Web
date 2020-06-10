@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { InformationLoaderComponent } from '../information-loader';
 import { LifxApiService } from '../../services/lifx-api.service';
-import { LightInfo } from '../../../../../DHC.Web.Common/models/models';
+import { LightInfo, LightState, LifxCommand } from '../../../../../DHC.Web.Common/models/models';
+
+import * as colorConverter from 'color-convert';
 
 @Component({
   selector: 'app-lifx',
@@ -9,37 +11,21 @@ import { LightInfo } from '../../../../../DHC.Web.Common/models/models';
   styleUrls: ['./lifx.component.css']
 })
 export class LifxComponent extends InformationLoaderComponent implements OnInit {
-  public arrayColors: any = {
-    color1: '#2883e9',
-    color2: '#e920e9',
-    color3: 'rgb(255,245,0)',
-    color4: 'rgb(236,64,64)',
-    color5: 'rgba(45,208,45,1)'
-  };
-
-  public selectedColor: string = 'color1';
-  public color1: string = '#2889e9';
-  public color2: string = '#e920e9';
-  public color3: string = '#fff500';
-  public color4: string = 'rgb(236,64,64)';
-  public color5: string = 'rgba(45,208,45,1)';
-  public color6: string = '#1973c0';
-  public color7: string = '#f200bd';
-  public color8: string = '#a8ff00';
-  public color9: string = '#278ce2';
-  public color10: string = '#0a6211';
-  public color11: string = '#f2ff00';
-  public color12: string = '#f200bd';
-  public color13: string = 'rgba(0,255,0,0.5)';
-  public color14: string = 'rgb(0,255,255)';
-  public color15: string = 'rgb(255,0,0)';
-  public color16: string = '#a51ad633';
-  public color17: string = '#666666';
-  public color18: string = '#ff0000';
-
   public KnownLights: LightInfo[];
+  public selectedColor: string;
+  public get hsb() {
+    return colorConverter.hex.hsv(this.selectedColor);
+  }
 
-  constructor(private api: LifxApiService) { super(); }
+  public loadingDetails: boolean = false;
+  public focusOn: LightInfo;
+
+  constructor(private api: LifxApiService) {
+    super();
+    this.KnownLights = [];
+    this.selectedColor = '';
+    this.focusOn = undefined;
+  }
 
   ngOnInit(): void {
     this.api.getDiscoveredLights()
@@ -58,5 +44,54 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
         this.KnownLights = lights.sort((a, b) => a.LightName.localeCompare(b.LightName));
       }, err => this.loading = false);
   }
- 
+
+  public selectLight(light: LightInfo) {
+    this.loadingDetails = true;
+    console.log('Selected ' + light.LightName);
+
+    this.focusOn = light;
+    this.api.getLightState(light.LightName)
+      .subscribe(detail => {
+        this.loadingDetails = false;
+
+        light.State = detail;
+        let rgb = colorConverter.hsv.rgb(detail.Color.Hue, detail.Color.Saturation, detail.Color.Brightness);
+        this.selectedColor = `#${colorConverter.rgb.hex(rgb)}`;
+
+      }, err => this.loadingDetails = false);
+  }
+
+  public updateColor() {
+    if (!this.focusOn) return;
+
+    let command: LifxCommand = new LifxCommand();
+    command.Lights = [this.focusOn.LightName];
+    command.Hue = this.hsb[0] / 1000;
+    command.Saturation = this.hsb[1] / 100;
+    command.Brightness = this.hsb[2] / 100;
+    command.Kelvin = this.focusOn.State.Color.Kelvin;
+    command.Duration = 1000;
+    this.sendAndClearFocus(command);
+  }
+
+  public setPower() {
+    if (!this.focusOn) return;
+
+    let command: LifxCommand = new LifxCommand();
+    command.Lights = [this.focusOn.LightName];
+    command.Duration = 1000;
+
+    if (this.focusOn.State.Power) {
+      command.TurnOff = true;
+    } else {
+      command.TurnOn = true;
+    }
+    this.sendAndClearFocus(command);
+  }
+
+  /** Send the command to the API, but then clear the light from focus.
+   * Quick workaround for not getting correct state until command finishes */
+  private sendAndClearFocus(command: LifxCommand) {
+    this.api.sendCommand(command).subscribe(() => this.focusOn = undefined, err => console.log(err));
+  }
 }
