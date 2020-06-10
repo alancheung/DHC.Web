@@ -13,6 +13,9 @@ export class LifxCommand {
     /** Transition duration of this command */
     public Duration: number;
 
+    /** Delay after this command before the next */
+    public Delay: number;
+
     /** (Hue, Saturation, Brightness, Kelvin) */
     public Color: [number, number, number, number];
 
@@ -20,7 +23,7 @@ export class LifxCommand {
     public get Hue() {
         return this.Color[0];
     }
-    /** [UNTESTED] Value between 0.0 and 1.0 */
+    /** Value between 0.0 and 1.0 */
     public get Saturation() {
         return this.Color[1];
     }
@@ -38,11 +41,13 @@ export class LifxCommand {
             throw SyntaxError('No data was present to parse!');
         }
 
+        // JSON convert to handle arrays and stuff correctly.
         let parsedData = JSON.parse(JSON.stringify(data));
         this.Lights = parsedData.Lights;
         this.TurnOn = isbooleantrue(parsedData.TurnOn);
         this.TurnOff = isbooleantrue(parsedData.TurnOff);
         this.Duration = +parsedData.Duration;
+        this.Delay = +parsedData.Delay;
         this.Color = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
     }
 

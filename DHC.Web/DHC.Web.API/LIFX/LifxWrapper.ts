@@ -60,8 +60,8 @@ export class LifxWrapper {
                     cmdChain = cmdChain
                         // Attach the next command in the sequence
                         .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence[cmdCount], parsedSettings[cmdCount]))
-                        // Delay to allow command to finish + a little extra.
-                        .then(() => this.happyDelay("Allow command duration", sequence[cmdCount].Duration + 500));
+                        // Delay to allow command to finish + a little extra
+                        .then(() => this.happyDelay("Allow command duration", (sequence[cmdCount].Delay || 0) + 100));
                 }
 
                 return await cmdChain;
