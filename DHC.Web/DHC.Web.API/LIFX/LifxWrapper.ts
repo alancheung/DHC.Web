@@ -1,4 +1,5 @@
-import { LifxCommand } from "./LifxCommand";
+import { LifxCommand } from './LifxCommand';
+import { LightInfo } from '../../DHC.Web.Common/models/models';
 const Lifx = require('node-lifx-lan');
 
 export class LifxWrapper {
@@ -10,10 +11,35 @@ export class LifxWrapper {
     /** Maximum number of attempts to automatically handle a request */
     private _maxAttempts: number = 3;
 
+    /** Pretty formatted (and TS) versions of this_lifx.device_lists */
+    public KnownLights: LightInfo[];
+
     constructor() {
-        //this._lifx.discover().then(this.printDiscovery).catch((error) => {
-        //    console.error(error);
-        //});
+        this.runDiscovery(true)
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+
+    /** Run discover() and process results for lifx */
+    public runDiscovery(log: boolean): Promise<LightInfo[]> {
+        console.log('Attempting new discovery...');
+        return this._lifx.discover().then((device_list) => this.handleDiscovery(device_list, log));
+    }
+
+    /**
+     * Process the results of a discovery command.
+     * @param device_list Device info from discover() command
+     * @param log Flag to print results.
+     */
+    private handleDiscovery(device_list: any[], log: boolean = true): LightInfo[] {
+        this.KnownLights = device_list.map(light => new LightInfo(light));
+
+        log && this.KnownLights.forEach((light) => {
+            console.log([light.IP, light.MAC, light.GroupName, light.LightName].join(' | '));
+        });
+
+        return this.KnownLights;
     }
 
     /**
@@ -85,7 +111,7 @@ export class LifxWrapper {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
         if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
-            discover = this._lifx.discover().then(this.printDiscovery);
+            discover = this._lifx.discover().then(this.handleDiscovery);
         } else {
             // No reason to run
             discover = Promise.resolve();
@@ -136,13 +162,11 @@ export class LifxWrapper {
         return lightNames.every(name => this._lifx._device_list.map(device => device['deviceInfo']['label']).includes(name));
     }
 
-    public printDiscovery(device_list: any[]) {
-        console.log('New discovery attempted!')
-        device_list.forEach((device) => {
-            console.log([device['ip'], device['mac'], device['deviceInfo']['label']].join(' | '));
-        });
-    }
-
+    /**
+     * Determine given a sequence of commands all of the lights needed for the sequence.
+     * Prevents running discover in the middle of a sequence. Pre-run discover if not all known
+     * @param sequence Sequence of commands upcoming.
+     */
     public getInvolvedLights(sequence: LifxCommand[]): string[] {
         let lightNames: string[] = [].concat.apply([], sequence.map(cmd => cmd.Lights));
         return lightNames;
