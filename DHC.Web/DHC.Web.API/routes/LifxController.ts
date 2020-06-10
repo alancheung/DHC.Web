@@ -10,14 +10,15 @@ const LightManager: LifxWrapper = new LifxWrapper();
 const lifxRouter = express.Router();
 
 // Register routes
-lifxRouter.get('/', getDiscoveredLights);
 lifxRouter.post('/', controlLight);
 
 lifxRouter.post(`/sequence`, sequenceControl);
+
+lifxRouter.get('/discover', getDiscoveredLights);
 lifxRouter.post('/discover', runDiscovery);
 
 /**
- * ROUTE: GET ./api/lifx
+ * ROUTE: GET ./api/lifx/discover
  * Get all discovered lights
  * @param req Express Request object.
  * @param resp Express Response object.
