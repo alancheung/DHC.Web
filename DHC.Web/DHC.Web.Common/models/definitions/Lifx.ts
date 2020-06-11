@@ -1,4 +1,5 @@
 import { isbooleantrue } from "../../functions";
+import { isNumber } from "util";
 
 /** https://www.npmjs.com/package/node-lifx-lan#LifxLanDevice-object */
 export class LightInfo {
@@ -62,7 +63,7 @@ export class LifxCommand {
     public Delay: number;
 
     /** (Hue, Saturation, Brightness, Kelvin) */
-    public Color: [number, number, number, number] = [-1.0, -1.0, -1.0, 2500];
+    public Color: [number, number, number, number] = [-1.0, -1.0, -1.0, -1];
 
     /** Value between 0.0. and 1.0 */
     public get Hue() {
@@ -120,7 +121,7 @@ export class LifxCommand {
 
     /** Make sure that there is a value for all colors and a valid transition duration. */
     public validColorChange(): boolean {
-        return this.Color.every(v => !!v && v != -1);
+        return this.Color.every(v => isNumber(v) && v != -1);
     }
 
     public convertToLifxLanFilter(): any {
