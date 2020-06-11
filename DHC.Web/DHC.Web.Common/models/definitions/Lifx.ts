@@ -62,38 +62,26 @@ export class LifxCommand {
     public Delay: number;
 
     /** (Hue, Saturation, Brightness, Kelvin) */
-    public Color: [number, number, number, number] = [-1.0, -1.0, -1.0, -1];
+    public Color: [number, number, number, number];
 
     /** Value between 0.0. and 1.0 */
     public get Hue() {
         return this.Color[0];
-    }
-    public set Hue(val) {
-        this.Color[0] = val;
     }
 
     /** Value between 0.0 and 1.0 */
     public get Saturation() {
         return this.Color[1];
     }
-    public set Saturation(val) {
-        this.Color[1] = val;
-    }
 
     /** Value between 0.0 and 1.0 */
     public get Brightness() {
         return this.Color[2];
     }
-    public set Brightness(val) {
-        this.Color[2] = val;
-    }
 
     /** Value between 2500 and 9000 */
     public get Kelvin() {
         return this.Color[3];
-    }
-    public set Kelvin(val) {
-        this.Color[3] = val;
     }
 
     constructor() { }
@@ -113,6 +101,8 @@ export class LifxCommand {
 
         if (parsedData.Hue || parsedData.Saturation || parsedData.Brightness || parsedData.Kelvin) {
             this.Color = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
+        } else if (!!parsedData.Color) {
+            this.Color = parsedData.Color;
         }
 
         return this;
@@ -120,7 +110,7 @@ export class LifxCommand {
 
     /** Make sure that there is a value for all colors and a valid transition duration. */
     public validColorChange(): boolean {
-        return this.Color.every(v => (!!v || v == 0) && v != -1);
+        return this.Color && this.Color.every(v => (!!v || v == 0) && v != -1);
     }
 
     public convertToLifxLanFilter(): any {
