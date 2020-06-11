@@ -1,5 +1,4 @@
 import { isbooleantrue } from "../../functions";
-import { isNumber } from "util";
 
 /** https://www.npmjs.com/package/node-lifx-lan#LifxLanDevice-object */
 export class LightInfo {
@@ -121,7 +120,7 @@ export class LifxCommand {
 
     /** Make sure that there is a value for all colors and a valid transition duration. */
     public validColorChange(): boolean {
-        return this.Color.every(v => isNumber(v) && v != -1);
+        return this.Color.every(v => (!!v || v == 0) && v != -1);
     }
 
     public convertToLifxLanFilter(): any {
