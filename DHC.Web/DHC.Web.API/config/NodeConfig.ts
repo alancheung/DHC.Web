@@ -5,4 +5,5 @@ export class DevConfig implements AppConfig {
     public redirectAddress: string = "http://localhost:4200";
     public currentSoftwareVersion: number = 0;
     public currentDatabaseVersion: number = 0;
+    public authorizedClients: object[] = [];
 }

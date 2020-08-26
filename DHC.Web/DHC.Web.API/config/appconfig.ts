@@ -16,6 +16,9 @@ export interface AppConfig {
 
     /** Current database version */
     currentDatabaseVersion: number;
+
+    /** List of pre-authorized clients */
+    authorizedClients: object[];
 }
 
 export function GetConfig(production: boolean): AppConfig {

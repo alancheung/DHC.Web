@@ -1,5 +1,5 @@
 import { ApplicationSettings } from "../config/appconfig";
-import { SensorReading, Log, PortalAccess } from '../../DHC.Web.Common/SQLite/tables';
+import { SensorReading, Log, PortalAccess, AuthorizedClient, Authentication } from '../../DHC.Web.Common/SQLite/tables';
 import { nameof } from "../../DHC.Web.Common/functions";
 
 let sqlite3 = require('sqlite3').verbose();
@@ -24,15 +24,23 @@ class DhcDatabaseContext {
                 throw err;
             } else {
                 console.log('Connected to the SQLite database.');
-                this._db.run(new PortalAccess(null).createTable().command, (err) => this.reportStatus(err, PortalAccess.name, 'seed'));
-                this._db.run(new SensorReading(null).createTable().command, err => this.reportStatus(err, SensorReading.name, 'seed'));
-                this._db.run(new Log(null).createTable().command, err => this.reportStatus(err, Log.name, 'seed'));
+                this._db.run(new PortalAccess(null).createTable().command, (err) => this.reportStatus(err, PortalAccess.name, 'CREATE'));
+                this._db.run(new SensorReading(null).createTable().command, err => this.reportStatus(err, SensorReading.name, 'CREATE'));
+                this._db.run(new Log(null).createTable().command, err => this.reportStatus(err, Log.name, 'CREATE'));
+                this._db.run(new AuthorizedClient(null).createTable().command, err => this.reportStatus(err, AuthorizedClient.name, 'CREATE'));
+                this._db.run(new Authentication(null).createTable().command, err => this.reportStatus(err, Authentication.name, 'CREATE'));
                 console.log('Database Tables created!');
 
                 setTimeout(() => {
                     // Create Indexes!
                     console.log('Creating indexes after sleeping 1 second!');
                     this._db.run(this.createLatestIndex('LatestPortalAccess', PortalAccess.name, nameof<PortalAccess>("StartDate")), err => this.reportStatus(err, PortalAccess.name, 'INDEX LatestPortalAccess'));
+
+                    console.log('Now seeding initial data!');
+                    let seedAuthorizationCommands = this.seedAuthorizedClients();
+                    seedAuthorizationCommands.forEach(command => {
+                        this._db.run(command, err => this.reportStatus(err, AuthorizedClient.name, 'SEED AuthorizedClients'));
+                    });
                 }, 1000);
             }
         });
@@ -59,6 +67,17 @@ class DhcDatabaseContext {
     */
     private createLatestIndex(indexName: string, table: string, column: string): string {
         return `CREATE INDEX IF NOT EXISTS "${indexName}" ON "${table}" ("${column}" DESC)`;
+    }
+
+    private seedAuthorizedClients(): string[] {
+        let clients: any[] = ApplicationSettings.Config.authorizedClients;
+
+        let commands: string[] = clients.map(c => {
+            return `INSERT INTO ${AuthorizedClient.name}(${nameof<AuthorizedClient>("PublicKey")},${nameof<AuthorizedClient>("Name")},${nameof<AuthorizedClient>("Zone")}) 
+                    SELECT '${c.PublicKey}', '${c.Name}', '${c.Zone}'
+                    WHERE NOT EXISTS(SELECT 1 FROM ${AuthorizedClient.name} WHERE ${nameof<AuthorizedClient>("PublicKey")} = '${c.PublicKey}')`});
+
+        return commands;
     }
 }
 
