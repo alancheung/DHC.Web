@@ -58,6 +58,12 @@
     <TypeScriptCompile Include="SQLite\tables.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\Authentication.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="SQLite\tables\AuthorizedClient.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="SQLite\tables\Log.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
