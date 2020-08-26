@@ -19,6 +19,7 @@ import routes from './routes/index';
 import PortalAccessController from './routes/PortalAccessController';
 import SensorController from './routes/SensorController';
 import LifxController from './routes/LifxController';
+import AuthorizationController from './routes/AuthorizationController';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,7 @@ app.use('/', routes);
 app.use('/api/portal', PortalAccessController);
 app.use('/api/sensor', SensorController);
 app.use('/api/lifx', LifxController);
+app.use('/authorization', AuthorizationController);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

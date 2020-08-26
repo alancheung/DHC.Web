@@ -66,6 +66,7 @@
     <TypeScriptCompile Include="LIFX\LifxWrapper.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="routes\AuthorizationController.ts" />
     <TypeScriptCompile Include="routes\LifxController.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
