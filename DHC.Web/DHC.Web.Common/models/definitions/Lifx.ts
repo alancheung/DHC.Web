@@ -105,6 +105,10 @@ export class LifxCommand {
             this.Color = parsedData.Color;
         }
 
+        if (isNaN(this.Duration)) {
+            throw SyntaxError('Duration is a required argument!');
+        }
+
         return this;
     }
 
