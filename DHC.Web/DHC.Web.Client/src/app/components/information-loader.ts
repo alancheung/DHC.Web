@@ -1,7 +1,11 @@
 import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 /** Defines a component that requires some period of time to load resources. */
+@Component({
+  selector: 'loader',
+  template: ''
+})
 export abstract class InformationLoaderComponent implements OnDestroy {
   /** Indicates if the object is currently loading resources. */
   public loading: boolean;
