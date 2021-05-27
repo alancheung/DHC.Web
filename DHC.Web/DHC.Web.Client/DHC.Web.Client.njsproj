@@ -12,8 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>076a9dc3-e5aa-4e72-bdd8-6600b86e9306</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
+    <StartupFile>src\main.ts</StartupFile>
     <StartWebBrowser>True</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -78,7 +77,6 @@
     <Content Include="dist\dhc-angular-client\vendor-es5.js.map" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
-    <Content Include="src\app\app.component copy.html" />
     <Content Include="src\app\app.component.css" />
     <Content Include="src\app\app.component.html" />
     <Content Include="src\app\components\doors\doors.component.css" />
