@@ -106,7 +106,9 @@ export class LifxWrapper {
 
         // Give back the result from above
         return rejectChain = rejectChain.catch((err) => {
-            console.log(`Light command failed after ${sequenceAttempts} attempts. Stopping command.`);
+            let msg = `Light sequence failed after ${sequenceAttempts} attempts. Stopping command.`;
+            console.log(msg);
+            throw err || msg;
         });
     }
 
@@ -132,7 +134,7 @@ export class LifxWrapper {
 
         return await discover.then(async () => {
             if (runCommand.Zones.length > 0) {
-                console.log(`Zone command parsed for '${runCommand.Lights}'!`);
+                console.log(`Zone command parsed for '${runCommand.Lights}' - ${JSON.stringify(runCommand)}!`);
                 // Validated to be only one device if Zones are specified.
                 let stripLight: any = await this.getDevice(runCommand.Lights[0]);
 
@@ -149,20 +151,20 @@ export class LifxWrapper {
                     // Apply if it is the last command in the sequence or we are immediately applying commands.
                     apply    : (cmdCount === settings.length - 1 || runCommand.ApplyZoneImmediately) ? 1 : 0, 
                 };
-                return stripLight.multiZoneSetColorZones(zoneCommand);
+                return await stripLight.multiZoneSetColorZones(zoneCommand);
 
             } else if (runCommand.TurnOn) {
                 let runDetail: any = runCommand.convertToLifxLanFilter();
                 console.log(`Parsed library light ON command settings: ${JSON.stringify(runDetail)}`);
-                return Lifx.turnOnFilter(runDetail);
+                return await Lifx.turnOnFilter(runDetail);
             } else if (runCommand.TurnOff) {
                 let runDetail: any = runCommand.convertToLifxLanFilter();
                 console.log(`Parsed library light OFF command settings: ${JSON.stringify(runDetail)}`);
-                return Lifx.turnOffFilter(runDetail);
+                return await Lifx.turnOffFilter(runDetail);
             } else {
                 let runDetail: any = runCommand.convertToLifxLanFilter();
                 console.log(`Parsed library light COLOR command settings: ${JSON.stringify(runDetail)}`);
-                return Lifx.setColorFilter(runDetail);
+                return await Lifx.setColorFilter(runDetail);
             }
         }).then(() => {
             console.log(`Command ${cmdCount} sent`);
