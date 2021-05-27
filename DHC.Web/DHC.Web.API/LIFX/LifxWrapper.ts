@@ -21,9 +21,9 @@ export class LifxWrapper {
     }
 
     /** Run discover() and process results for lifx */
-    public runDiscovery(log: boolean): Promise<LightInfo[]> {
+    public async runDiscovery(log: boolean): Promise<LightInfo[]> {
         console.log('Attempting new discovery...');
-        return this._lifx.discover().then((device_list) => this.handleDiscovery(device_list, log));
+        return await this._lifx.discover().then((device_list) => this.handleDiscovery(device_list, log));
     }
 
     /**
@@ -54,7 +54,8 @@ export class LifxWrapper {
         for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
             // Single command should attempt a discovery if any command has failed. Assume optimistic on first.
             let forceDiscovery: boolean = attempt != 0;
-            rejectChain = rejectChain.catch(() => this.handle(forceDiscovery, command.Lights, command, parsedCommand)).catch(this.angryDelay);
+            rejectChain = rejectChain.catch(() => this.handle(forceDiscovery, command.Lights, [command], [parsedCommand], 0))
+                .catch(this.angryDelay);
         }
 
         // Give back the result from above
@@ -86,9 +87,9 @@ export class LifxWrapper {
                     let forceDiscovery: boolean = attempt != 0 && cmdCount == 0;
                     cmdChain = cmdChain
                         // Attach the next command in the sequence
-                        .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence[cmdCount], parsedSettings[cmdCount]))
+                        .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence, parsedSettings, cmdCount))
                         // Delay to allow command to finish + a little extra
-                        .then(() => this.happyDelay("Allow command duration", (sequence[cmdCount].Delay || 0) + 100));
+                        .then(() => this.happyDelay("Allow command duration", (sequence[cmdCount].Delay || 0)));
                 }
 
                 return await cmdChain;
@@ -107,8 +108,9 @@ export class LifxWrapper {
      * @param forceDiscovery Should we attempt discovery before sending the command.
      * @param settings New light settings.
      * @param details Settings parameter converted to node-lifx-lan readable obj format.
+     * @param cmdCount The index of the commmand currently being handled.
      */
-    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand, details: any): Promise<void> {
+    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand[], details: any[], cmdCount: number): Promise<void> {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
         if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
@@ -118,23 +120,45 @@ export class LifxWrapper {
             discover = Promise.resolve();
         }
 
-        let cmdName: string = 'UNKNOWN';
-        return await discover.then(() => {
-            console.log('Sending new command!')
-            if (settings.TurnOn) {
-                cmdName = 'ON';
-                return Lifx.turnOnFilter(details);
-            } else if (settings.TurnOff) {
-                cmdName = 'OFF';
-                return Lifx.turnOffFilter(details);
+        // Get the single command
+        let runCommand: LifxCommand = settings[cmdCount];
+        let runDetail: any = details[cmdCount];
+
+        return await discover.then(async () => {
+            if (runCommand.Zones.length > 0) {
+                console.log(`Zone command parsed for '${runCommand.Lights}'!`);
+                // Validated to be only one device if Zones are specified.
+                let stripLight: any = await this.getDevice(runCommand.Lights[0]);
+
+                let zoneCommand: any = {
+                    start    : runCommand.Zones[0],
+                    end      : runCommand.Zones[0] + runCommand.Zones[1],
+                    color    : {
+                        hue        : runCommand.Hue,
+                        saturation : runCommand.Saturation,
+                        brightness : runCommand.Brightness,
+                        kelvin     : runCommand.Kelvin
+                    },
+                    duration : runCommand.Duration,
+                    // Apply if it is the last command in the sequence or we are immediately applying commands.
+                    apply    : (cmdCount === settings.length - 1 || runCommand.ApplyZoneImmediately) ? 1 : 0, 
+                };
+                return stripLight.multiZoneSetColorZones(zoneCommand);
+
+            } else if (runCommand.TurnOn) {
+                console.log(`Sending new ON command to '${runCommand.Lights}'!`);
+                return Lifx.turnOnFilter(runDetail);
+            } else if (runCommand.TurnOff) {
+                console.log(`Sending new OFF command to '${runCommand.Lights}'!`);
+                return Lifx.turnOffFilter(runDetail);
             } else {
-                cmdName = 'COLOR';
-                return Lifx.setColorFilter(details);
+                console.log(`Sending new COLOR command to '${runCommand.Lights}'!`);
+                return Lifx.setColorFilter(runDetail);
             }
         }).then(() => {
-            console.log(`New '${cmdName}' command sent to '${settings.Lights}'!`);
+            console.log(`Command ${cmdCount} sent`);
         }).catch((err) => {
-            console.log(`Error (${err}) sending '${cmdName}' command to '${settings.Lights}'! Known lights '${this._lifx._device_list.map(device => device['deviceInfo']['label'])}'`);
+            console.log(`Error (${err}) sending command to '${runCommand.Lights}'! Known lights '${this._lifx._device_list.map(device => device['deviceInfo']['label'])}'`);
             throw err;
         });
     }
@@ -160,7 +184,8 @@ export class LifxWrapper {
      */
     public lightsDiscovered(lightNames: string[]): boolean {
         // "For every light name we're looking for, it exists in the _lifx._device_list."
-        return lightNames.every(name => this._lifx._device_list.map(device => device['deviceInfo']['label']).includes(name));
+        let knownDeviceNames: string[] = this._lifx._device_list.map(device => device['deviceInfo']['label']);
+        return lightNames.every(name => knownDeviceNames.includes(name));
     }
 
     /**
@@ -173,17 +198,33 @@ export class LifxWrapper {
         return lightNames;
     }
 
-    /**
-     * Get specific details for the named light
-     * @param name
+    /** 
+     * Get an underlying LifxDevice object.
+     * @param name The deviceInfo.label of the light
      */
-    public getDetail(name: string): Promise<LightState> {
+    private getDevice(name: string): Promise<any> {
         let device: any = this._lifx._device_list.find(device => device['deviceInfo']['label'] == name);
 
         if (!device) {
             throw Error(`'${name}' was not a known device. Run discover()?`)
         }
 
-        return device.lightGet().then(info => new LightState(info));
+        return Promise.resolve(device);
+    }
+
+    /**
+     * Get specific details for the named light
+     * @param name The deviceInfo.label of the light
+     */
+    public getDetail(name: string): Promise<LightState> {
+        return this.getDevice(name).then(device => device.lightGet().then(info => new LightState(info)));
+    }
+
+    /**
+     * Get specific details for the named multi-zone light
+     * @param name The deviceInfo.label of the light
+     */
+    public getZoneDetail(name: string): Promise<any> {
+        return this.getDevice(name).then(device => device.multiZoneGetColorZones({ start: 0, end: 16 }));
     }
 }

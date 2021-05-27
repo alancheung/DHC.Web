@@ -45,6 +45,17 @@ export class LightColor {
     }
 }
 
+export enum ZONE_APPLY {
+    /** Send the command but do not apply */
+    NO_APPLY = 0,
+
+    /** Send the command and apply immediately */
+    APPLY = 1,
+
+    /** ???? */
+    APPLY_ONLY = 2
+}
+
 export class LifxCommand {
     /** Array of light names */
     public Lights: string[];
@@ -54,6 +65,15 @@ export class LifxCommand {
 
     /** Flag stating whether this command should turn the lights off */
     public TurnOff: boolean;
+
+    /** What zones does this effect */
+    public Zones: number[];
+
+    /** If multiple zones are defined, should we queue the commands or send them as received? */
+    public ApplyZoneImmediately: boolean;
+
+    /** Any fireware effects to play? */
+    public Effect: string;
 
     /** Transition duration of this command */
     public Duration: number;
@@ -98,6 +118,10 @@ export class LifxCommand {
         this.TurnOff = isbooleantrue(parsedData.TurnOff);
         this.Duration = +parsedData.Duration;
         this.Delay = +parsedData.Delay;
+        /** Added in later version (0.00.04), may not be available */
+        this.Zones = parsedData.Zones || [];
+        this.Effect = parsedData.Effect;
+        this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
 
         if (parsedData.Hue || parsedData.Saturation || parsedData.Brightness || parsedData.Kelvin) {
             this.Color = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
@@ -109,6 +133,18 @@ export class LifxCommand {
             throw SyntaxError('Duration is a required argument!');
         }
 
+        if (this.Zones.length > 0) {
+            // Zone settings are at device level. Ensure only one device is given when attempting zone command
+            if (this.Lights.length !== 1) {
+                throw 'Cannot set zone command for more than one light!';
+            }
+
+            // Expected pairing of zone definitions
+            if (this.Zones.length !== 2) {
+                throw 'A zone definition must define a pair of [startingZone, numberOfZones] arguments!';
+            }
+        }
+
         return this;
     }
 
@@ -117,6 +153,7 @@ export class LifxCommand {
         return this.Color && this.Color.every(v => (!!v || v == 0) && v != -1);
     }
 
+    /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
     public convertToLifxLanFilter(): any {
         let details: any = {
             // Fake LifxLanFilter based on light name (label) only

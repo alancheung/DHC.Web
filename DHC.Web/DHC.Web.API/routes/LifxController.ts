@@ -17,6 +17,7 @@ lifxRouter.get('/discover', getDiscoveredLights);
 lifxRouter.post('/discover', runDiscovery);
 
 lifxRouter.get('/light/:name', getLightDetails);
+lifxRouter.get('/zone/:name', getZoneDetails);
 
 /**
  * ROUTE: GET ./api/lifx/light/{name}
@@ -28,6 +29,18 @@ async function getLightDetails(req: Request, resp: Response) {
     await LightManager.getDetail(req.params.name)
         .then((detail) => resp.status(200).json(detail))
         .catch((err) => resp.status(500).send(err));
+}
+
+/**
+ * ROUTE: GET ./api/lifx/zone/{name}
+ * Get the details of the light with the name={name}
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
+async function getZoneDetails(req: Request, resp: Response) {
+    await LightManager.getZoneDetail(req.params.name)
+        .then((detail) => resp.status(200).json(detail))
+        .catch((err) => resp.status(500).json(err));
 }
 
 /**
@@ -59,10 +72,14 @@ async function runDiscovery(req: Request, resp: Response) {
  * @param resp Express Response object.
  */
 async function controlLight(req: Request, resp: Response) {
-    let settings: LifxCommand = new LifxCommand().configure(req.body);
-    return await LightManager.sendCommand(settings)
-        .then(() => resp.status(200).send())
-        .catch((err) => resp.status(500).send(err));
+    try {
+        let settings: LifxCommand = new LifxCommand().configure(req.body);
+        return await LightManager.sendCommand(settings)
+            .then(() => resp.status(200).send())
+            .catch((err) => resp.status(500).send(err));
+    } catch (err) {
+        resp.status(500).send(err);
+    }
 }
 
 /**
@@ -72,11 +89,15 @@ async function controlLight(req: Request, resp: Response) {
  * @param resp Express Response object.
  */
 async function sequenceControl(req: Request, resp: Response) {
-    let commands: any[] = req.body;
-    let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c));
-    return await LightManager.sendSequence(sequence)
-        .then(() => resp.status(200).send())
-        .catch((err) => resp.status(500).send(err));
+    try {
+        let commands: any[] = req.body;
+        let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c));
+        return await LightManager.sendSequence(sequence)
+            .then(() => resp.status(200).send())
+            .catch((err) => resp.status(500).send(err));
+    } catch (err) {
+        resp.status(500).send(err);
+    }
 }
 
 
