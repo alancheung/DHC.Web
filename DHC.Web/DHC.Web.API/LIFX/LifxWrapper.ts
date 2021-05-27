@@ -1,5 +1,5 @@
 import { LightInfo, LifxCommand, LightState } from '../../DHC.Web.Common/models/models';
-const Lifx = require('node-lifx-lan');
+import Lifx = require('node-lifx-lan');
 
 export class LifxWrapper {
     private _lifx: any = Lifx;
@@ -35,7 +35,7 @@ export class LifxWrapper {
         this.KnownLights = device_list.map(light => new LightInfo(light));
 
         log && this.KnownLights.forEach((light) => {
-            console.log([light.IP, light.MAC, light.GroupName, light.LightName].join(' | '));
+            console.log([light.IP, light.MAC, light.GroupName, light.LightName].join(' \t '));
         });
 
         return this.KnownLights;
@@ -59,7 +59,9 @@ export class LifxWrapper {
 
         // Give back the result from above
         return rejectChain = rejectChain.catch((err) => {
-            console.log(`Light command failed after ${this._maxAttempts} attempts. Stopping command.`);
+            let msg = `Light command failed after ${this._maxAttempts} attempts. Stopping command.`;
+            console.log(msg);
+            throw err || msg;
         });
     }
 
@@ -133,7 +135,7 @@ export class LifxWrapper {
             console.log(`New '${cmdName}' command sent to '${settings.Lights}'!`);
         }).catch((err) => {
             console.log(`Error (${err}) sending '${cmdName}' command to '${settings.Lights}'! Known lights '${this._lifx._device_list.map(device => device['deviceInfo']['label'])}'`);
-            throw 'Retry!';
+            throw err;
         });
     }
 
