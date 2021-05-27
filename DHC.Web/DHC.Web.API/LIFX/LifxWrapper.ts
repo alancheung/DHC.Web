@@ -46,15 +46,13 @@ export class LifxWrapper {
      * @param command 
      */
     public async sendCommand(command: LifxCommand): Promise<void> {
-        let parsedCommand: any = command.convertToLifxLanFilter();
-        console.log(`Parsed library light settings: ${JSON.stringify(parsedCommand)}`);
 
         // Attempt commands with delay!
         let rejectChain: Promise<void> = Promise.reject();
         for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
             // Single command should attempt a discovery if any command has failed. Assume optimistic on first.
             let forceDiscovery: boolean = attempt != 0;
-            rejectChain = rejectChain.catch(() => this.handle(forceDiscovery, command.Lights, [command], [parsedCommand], 0))
+            rejectChain = rejectChain.catch(() => this.handle(forceDiscovery, command.Lights, [command], 0))
                 .catch(this.angryDelay);
         }
 
@@ -71,25 +69,34 @@ export class LifxWrapper {
      * @param sequence
      */
     public async sendSequence(sequence: LifxCommand[]): Promise<void> {
-        let parsedSettings: any[] = sequence.map(cmd => cmd.convertToLifxLanFilter());
-        console.log(`Parsed library light settings: ${JSON.stringify(parsedSettings)}`);
+        // Get the list of involved lights for all lights in the sequence to ensure that all lights have been discovered before 
+        // running the commands. Prevents sending a sequence commands and then having to break to discover.
         let allInvolvedLights: any = this.getInvolvedLights(sequence);
 
-        // Attempt commands with delay!
+        // The last successfully completed set. Allows system to restart attempt at the failed command and not repeat.
+        let lastCompletedCommand: number = 0;
+
+        // Give extra retries to get through sequence since it can fail on multiple steps. Completely arbitrary modifier.
+        let sequenceAttempts = 2 * this._maxAttempts;
+
+        // Start with a rejection in order to continually retry on rejections.
         let rejectChain: Promise<void> = Promise.reject();
-        for (let attempt = 0; attempt < this._maxAttempts; attempt++) {
+        for (let attempt = 0; attempt < sequenceAttempts; attempt++) {
             rejectChain = rejectChain.catch(async () => {
                 let cmdChain = Promise.resolve();
 
-                for (let cmdCount = 0; cmdCount < parsedSettings.length; cmdCount++) {
-                    // Run discovery if the first attempt has failed and this is the first command in the sequence
-                    // Prevents running discovery before every command in a sequence.
-                    let forceDiscovery: boolean = attempt != 0 && cmdCount == 0;
+                for (let cmdCount = lastCompletedCommand; cmdCount < sequence.length; cmdCount++) {
+                    // Run discovery if the first attempt has failed and this is the first command in the (new) sequence
+                    // Prevents running discovery before every command in a sequence in a retry.
+                    let forceDiscovery: boolean = attempt != 0 && cmdCount == lastCompletedCommand;
                     cmdChain = cmdChain
                         // Attach the next command in the sequence
-                        .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence, parsedSettings, cmdCount))
+                        .then(() => this.handle(forceDiscovery, allInvolvedLights, sequence, cmdCount))
                         // Delay to allow command to finish + a little extra
-                        .then(() => this.happyDelay("Allow command duration", (sequence[cmdCount].Delay || 0)));
+                        .then(async () => {
+                            await this.happyDelay("Allow command delay", (sequence[cmdCount].Delay || 0));
+                            lastCompletedCommand = cmdCount;
+                        });
                 }
 
                 return await cmdChain;
@@ -99,7 +106,7 @@ export class LifxWrapper {
 
         // Give back the result from above
         return rejectChain = rejectChain.catch((err) => {
-            console.log(`Light command failed after ${this._maxAttempts} attempts. Stopping command.`);
+            console.log(`Light command failed after ${sequenceAttempts} attempts. Stopping command.`);
         });
     }
 
@@ -110,7 +117,7 @@ export class LifxWrapper {
      * @param details Settings parameter converted to node-lifx-lan readable obj format.
      * @param cmdCount The index of the commmand currently being handled.
      */
-    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand[], details: any[], cmdCount: number): Promise<void> {
+    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand[], cmdCount: number): Promise<void> {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
         if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
@@ -122,7 +129,6 @@ export class LifxWrapper {
 
         // Get the single command
         let runCommand: LifxCommand = settings[cmdCount];
-        let runDetail: any = details[cmdCount];
 
         return await discover.then(async () => {
             if (runCommand.Zones.length > 0) {
@@ -146,13 +152,16 @@ export class LifxWrapper {
                 return stripLight.multiZoneSetColorZones(zoneCommand);
 
             } else if (runCommand.TurnOn) {
-                console.log(`Sending new ON command to '${runCommand.Lights}'!`);
+                let runDetail: any = runCommand.convertToLifxLanFilter();
+                console.log(`Parsed library light ON command settings: ${JSON.stringify(runDetail)}`);
                 return Lifx.turnOnFilter(runDetail);
             } else if (runCommand.TurnOff) {
-                console.log(`Sending new OFF command to '${runCommand.Lights}'!`);
+                let runDetail: any = runCommand.convertToLifxLanFilter();
+                console.log(`Parsed library light OFF command settings: ${JSON.stringify(runDetail)}`);
                 return Lifx.turnOffFilter(runDetail);
             } else {
-                console.log(`Sending new COLOR command to '${runCommand.Lights}'!`);
+                let runDetail: any = runCommand.convertToLifxLanFilter();
+                console.log(`Parsed library light COLOR command settings: ${JSON.stringify(runDetail)}`);
                 return Lifx.setColorFilter(runDetail);
             }
         }).then(() => {
