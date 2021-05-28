@@ -67,6 +67,14 @@ export enum ZONE_EFFECT_MOVE_DIRECTION {
     AWAY = 1
 }
 
+export class SequenceCommand {
+    /** The number of times to repeat the sequence command. Alternative to firmware effects. */
+    public Count: number;
+
+    /** The command sequence */
+    public Sequence: LifxCommand[];
+}
+
 export class LifxCommand {
     /** Array of light names */
     public Lights: string[];

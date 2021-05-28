@@ -66,7 +66,7 @@ export class LifxWrapper {
 
     /**
      * Update the lights to the values described in settings
-     * @param sequence
+     * @param sequence The sequence of commands to send
      */
     public async sendSequence(sequence: LifxCommand[]): Promise<void> {
         // Get the list of involved lights for all lights in the sequence to ensure that all lights have been discovered before 

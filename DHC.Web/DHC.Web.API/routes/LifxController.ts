@@ -90,9 +90,20 @@ async function controlLight(req: Request, resp: Response) {
  */
 async function sequenceControl(req: Request, resp: Response) {
     try {
-        let commands: any[] = req.body;
+        let count: number = +req.body.Count;
+        let commands: any[] = req.body.Sequence;
         let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c));
-        return await LightManager.sendSequence(sequence)
+
+        let sequencePromise: Promise<void> = Promise.resolve();
+        for (let repeatCount = 0; repeatCount < count; repeatCount++) {
+            sequencePromise = sequencePromise.then(async () => {
+                await LightManager.sendSequence(sequence)
+                    .catch((err) => resp.status(500).send(err));
+                console.log(`Completed sequence repeat ${repeatCount}`)
+            })
+        }
+
+        return await sequencePromise
             .then(() => resp.status(200).send())
             .catch((err) => resp.status(500).send(err));
     } catch (err) {
