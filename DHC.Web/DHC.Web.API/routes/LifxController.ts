@@ -28,7 +28,7 @@ lifxRouter.get('/zone/:name', getZoneDetails);
 async function getLightDetails(req: Request, resp: Response) {
     await LightManager.getDetail(req.params.name)
         .then((detail) => resp.status(200).json(detail))
-        .catch((err) => resp.status(500).send(err));
+        .catch((err) => resp.status(500).json(err));
 }
 
 /**
@@ -62,7 +62,7 @@ function getDiscoveredLights(req: Request, resp: Response) {
 async function runDiscovery(req: Request, resp: Response) {
     await LightManager.runDiscovery(false)
         .then((lights) => resp.status(200).json(lights))
-        .catch((err) => resp.status(500).send(err));
+        .catch((err) => resp.status(500).json(err));
 }
 
 /**
@@ -76,9 +76,9 @@ async function controlLight(req: Request, resp: Response) {
         let settings: LifxCommand = new LifxCommand().configure(req.body);
         return await LightManager.sendCommand(settings)
             .then(() => resp.status(200).send('OK'))
-            .catch((err) => resp.status(500).send(err));
+            .catch((err) => resp.status(500).json(err));
     } catch (err) {
-        resp.status(500).send(err);
+        resp.status(500).json(err);
     }
 }
 
@@ -98,16 +98,16 @@ async function sequenceControl(req: Request, resp: Response) {
         for (let repeatCount = 0; repeatCount < count; repeatCount++) {
             sequencePromise = sequencePromise.then(async () => {
                 await LightManager.sendSequence(sequence)
-                    .catch((err) => resp.status(500).send(err));
+                    .catch((err) => resp.status(500).json(err));
                 console.log(`Completed sequence repeat ${repeatCount}`)
             })
         }
 
         return await sequencePromise
             .then(() => resp.status(200).send('OK'))
-            .catch((err) => resp.status(500).send(err));
+            .catch((err) => resp.status(500).json(err));
     } catch (err) {
-        resp.status(500).send(err);
+        resp.status(500).json(err);
     }
 }
 
