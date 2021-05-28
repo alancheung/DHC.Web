@@ -75,7 +75,7 @@ async function controlLight(req: Request, resp: Response) {
     try {
         let settings: LifxCommand = new LifxCommand().configure(req.body);
         return await LightManager.sendCommand(settings)
-            .then(() => resp.status(200).send())
+            .then(() => resp.status(200).send('OK'))
             .catch((err) => resp.status(500).send(err));
     } catch (err) {
         resp.status(500).send(err);
@@ -104,7 +104,7 @@ async function sequenceControl(req: Request, resp: Response) {
         }
 
         return await sequencePromise
-            .then(() => resp.status(200).send())
+            .then(() => resp.status(200).send('OK'))
             .catch((err) => resp.status(500).send(err));
     } catch (err) {
         resp.status(500).send(err);
