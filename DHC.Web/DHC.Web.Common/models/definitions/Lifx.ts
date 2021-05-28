@@ -45,6 +45,7 @@ export class LightColor {
     }
 }
 
+/** Should any zone commands be applied with the command */
 export enum ZONE_APPLY {
     /** Send the command but do not apply */
     NO_APPLY = 0,
@@ -54,6 +55,16 @@ export enum ZONE_APPLY {
 
     /** ???? */
     APPLY_ONLY = 2
+}
+
+export enum ZONE_EFFECT_TYPE {
+    OFF = 0,
+    MOVE = 1,
+}
+
+export enum ZONE_EFFECT_MOVE_DIRECTION {
+    TOWARDS = 0,
+    AWAY = 1
 }
 
 export class LifxCommand {
@@ -73,7 +84,7 @@ export class LifxCommand {
     public ApplyZoneImmediately: boolean;
 
     /** Any fireware effects to play? */
-    public Effect: string;
+    public Effect: number[];
 
     /** Transition duration of this command */
     public Duration: number;
@@ -120,7 +131,7 @@ export class LifxCommand {
         this.Delay = +parsedData.Delay;
         /** Added in later version (0.00.04), may not be available */
         this.Zones = parsedData.Zones || [];
-        this.Effect = parsedData.Effect;
+        this.Effect = parsedData.Effect || [];
         this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
 
         if (parsedData.Hue || parsedData.Saturation || parsedData.Brightness || parsedData.Kelvin) {
@@ -142,6 +153,18 @@ export class LifxCommand {
             // Expected pairing of zone definitions
             if (this.Zones.length !== 2) {
                 throw 'A zone definition must define a pair of [startingZone, numberOfZones] arguments!';
+            }
+        }
+
+        if (this.Effect.length > 0) {
+            // Zone effects are at device level. Ensure only one device is given when attempting zone command
+            if (this.Lights.length !== 1) {
+                throw 'Cannot set zone effect for more than one light!';
+            }
+
+            // Expected pairing of zone effects
+            if (this.Effect.length !== 2) {
+                throw 'A zone effect must define a pair of [effectType, direction] arguments!';
             }
         }
 

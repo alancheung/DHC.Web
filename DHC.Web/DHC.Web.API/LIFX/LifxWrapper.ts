@@ -133,7 +133,21 @@ export class LifxWrapper {
         let runCommand: LifxCommand = settings[cmdCount];
 
         return await discover.then(async () => {
-            if (runCommand.Zones.length > 0) {
+            if (runCommand.Effect.length > 0) {
+                console.log(`Zone effect parsed for '${runCommand.Lights}' - ${JSON.stringify(runCommand)}!`);
+
+                // Validated to be only one device if effects are specified.
+                let stripLight: any = await this.getDevice(runCommand.Lights[0]);
+                let zoneEffect: any = {
+                    type: runCommand.Effect[0],
+                    // Weird but it is the time in animations.
+                    speed: runCommand.Delay,
+                    // Time for entire animation; 0 for infinite
+                    duration: runCommand.Duration,
+                    direction: runCommand.Effect[1]
+                };
+                return await stripLight.multiZoneSetEffect(zoneEffect);
+            } else if (runCommand.Zones.length > 0) {
                 console.log(`Zone command parsed for '${runCommand.Lights}' - ${JSON.stringify(runCommand)}!`);
                 // Validated to be only one device if Zones are specified.
                 let stripLight: any = await this.getDevice(runCommand.Lights[0]);
@@ -152,7 +166,6 @@ export class LifxWrapper {
                     apply    : (cmdCount === settings.length - 1 || runCommand.ApplyZoneImmediately) ? 1 : 0, 
                 };
                 return await stripLight.multiZoneSetColorZones(zoneCommand);
-
             } else if (runCommand.TurnOn) {
                 let runDetail: any = runCommand.convertToLifxLanFilter();
                 console.log(`Parsed library light ON command settings: ${JSON.stringify(runDetail)}`);
