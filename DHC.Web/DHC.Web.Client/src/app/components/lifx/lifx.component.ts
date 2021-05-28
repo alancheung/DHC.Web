@@ -66,7 +66,7 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
 
     let command: LifxCommand = new LifxCommand();
     command.Lights = [this.focusOn.LightName];
-    command.Color = [this.hsb[0] / 1000, this.hsb[1] / 100, this.hsb[2] / 100, this.focusOn.State.Color.Kelvin];
+    command.HsbColor = [this.hsb[0] / 1000, this.hsb[1] / 100, this.hsb[2] / 100, this.focusOn.State.Color.Kelvin];
     command.Duration = 1000;
     this.sendAndClearFocus(command);
   }

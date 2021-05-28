@@ -33,7 +33,7 @@ export class LifxWrapper {
      */
     private handleDiscovery(device_list: any[], log: boolean = true): LightInfo[] {
         this.KnownLights = device_list.map(light => new LightInfo(light));
-
+        
         log && this.KnownLights.forEach((light) => {
             console.log([light.IP, light.MAC, light.GroupName, light.LightName].join(' \t '));
         });

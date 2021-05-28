@@ -101,26 +101,26 @@ export class LifxCommand {
     public Delay: number;
 
     /** (Hue, Saturation, Brightness, Kelvin) */
-    public Color: [number, number, number, number];
+    public HsbColor: [number, number, number, number];
 
     /** Value between 0.0. and 1.0 */
     public get Hue() {
-        return this.Color[0];
+        return this.HsbColor[0];
     }
 
     /** Value between 0.0 and 1.0 */
     public get Saturation() {
-        return this.Color[1];
+        return this.HsbColor[1];
     }
 
     /** Value between 0.0 and 1.0 */
     public get Brightness() {
-        return this.Color[2];
+        return this.HsbColor[2];
     }
 
     /** Value between 2500 and 9000 */
     public get Kelvin() {
-        return this.Color[3];
+        return this.HsbColor[3];
     }
 
     constructor() { }
@@ -143,9 +143,9 @@ export class LifxCommand {
         this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
 
         if (parsedData.Hue || parsedData.Saturation || parsedData.Brightness || parsedData.Kelvin) {
-            this.Color = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
+            this.HsbColor = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
         } else if (!!parsedData.Color) {
-            this.Color = parsedData.Color;
+            this.HsbColor = parsedData.Color;
         }
 
         if (isNaN(this.Duration)) {
@@ -181,7 +181,7 @@ export class LifxCommand {
 
     /** Make sure that there is a value for all colors and a valid transition duration. */
     public validColorChange(): boolean {
-        return this.Color && this.Color.every(v => (!!v || v == 0) && v != -1);
+        return this.HsbColor && this.HsbColor.every(v => (!!v || v == 0) && v != -1);
     }
 
     /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
