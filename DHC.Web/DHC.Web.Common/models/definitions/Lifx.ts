@@ -140,15 +140,16 @@ export class LifxCommand {
         // Kelvin not required as it not used by the colors (only applicable during transitions to/from white).
         this.Kelvin = +parsedData.Kelvin || 2500;
 
-        this.Hue = +parsedData.Hue || undefined;
-        this.Saturation = +parsedData.Saturation || undefined;
-
-        if (parsedData.Color && !this.Hue && !this.Saturation) {
+        if (parsedData.Color) {
             let obj: any = colorManager.cssToHsb({ css: parsedData.Color });
             this.Hue = obj.hsb.hue;
             this.Saturation = obj.hsb.saturation;
             // Brightness is ignored. 
             // It affects the color but since it directly controls lumen leave it up to the required parameter and get the color close enough.
+        } else {
+            // 0 == undefined == falsey, but number value required to prevent system from imploding.
+            this.Hue = +parsedData.Hue || 0.0;
+            this.Saturation = +parsedData.Saturation || 0.0;
         }
         
         if (isNaN(this.Duration)) {
