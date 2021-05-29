@@ -10,7 +10,6 @@ const lifxRouter = express.Router();
 
 // Register routes
 lifxRouter.post('/', controlLight);
-
 lifxRouter.post(`/sequence`, sequenceControl);
 
 lifxRouter.get('/discover', getDiscoveredLights);
@@ -18,6 +17,8 @@ lifxRouter.post('/discover', runDiscovery);
 
 lifxRouter.get('/light/:name', getLightDetails);
 lifxRouter.get('/zone/:name', getZoneDetails);
+
+lifxRouter.post('/test', apiTest);
 
 /**
  * ROUTE: GET ./api/lifx/light/{name}
@@ -73,7 +74,7 @@ async function runDiscovery(req: Request, resp: Response) {
  */
 async function controlLight(req: Request, resp: Response) {
     try {
-        let settings: LifxCommand = new LifxCommand().configure(req.body);
+        let settings: LifxCommand = new LifxCommand().configure(req.body, LightManager.ColorManager);
         return await LightManager.sendCommand(settings)
             .then(() => resp.status(200).send('OK'))
             .catch((err) => resp.status(500).json(err));
@@ -92,7 +93,7 @@ async function sequenceControl(req: Request, resp: Response) {
     try {
         let count: number = +req.body.Count;
         let commands: any[] = req.body.Sequence;
-        let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c));
+        let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c, LightManager.ColorManager));
 
         let sequencePromise: Promise<void> = Promise.resolve();
         for (let repeatCount = 0; repeatCount < count; repeatCount++) {
@@ -111,6 +112,23 @@ async function sequenceControl(req: Request, resp: Response) {
     }
 }
 
+/**
+ * ROUTE: POST ./api/lifx/test
+ * Blank Test function.
+ * @param req Express Request object.
+ * @param resp Express Response object.
+ */
+async function apiTest(req: Request, resp: Response) {
+    try {
+        let settings: LifxCommand = new LifxCommand().configure(req.body, LightManager.ColorManager);
 
+        let colorGuy: any = LightManager.ColorManager;
+        let rgb = colorGuy.hsbToRgb({ hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin })
+
+        resp.status(200).json(rgb);
+    } catch (err) {
+        resp.status(500).json(err);
+    }
+}
 
 export default lifxRouter;

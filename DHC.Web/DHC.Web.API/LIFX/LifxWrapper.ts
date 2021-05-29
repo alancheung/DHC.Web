@@ -1,10 +1,20 @@
 import { LightInfo, LifxCommand, LightState } from '../../DHC.Web.Common/models/models';
 import Lifx = require('node-lifx-lan');
+import ColorManager = require('../node_modules/node-lifx-lan/lib/lifx-lan-color');
 
 export class LifxWrapper {
+    /** Underlying LIFX (node-lifx-lan) object. */
     private _lifx: any = Lifx;
+    /** Public LIFX (node-lifx-lan) object */
     public get LifxClient() {
         return this._lifx;
+    }
+
+    /** Underlying LifxLanColor (node-lifx-lan) object */
+    private _colorManager: any = ColorManager;
+    /** Public LifxLanColor (node-lifx-lan) object */
+    public get ColorManager() {
+        return this._colorManager;
     }
 
     /** Maximum number of attempts to automatically handle a request */
@@ -167,15 +177,15 @@ export class LifxWrapper {
                 };
                 return await stripLight.multiZoneSetColorZones(zoneCommand);
             } else if (runCommand.TurnOn) {
-                let runDetail: any = runCommand.convertToLifxLanFilter();
+                let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light ON command settings: ${JSON.stringify(runDetail)}`);
                 return await Lifx.turnOnFilter(runDetail);
             } else if (runCommand.TurnOff) {
-                let runDetail: any = runCommand.convertToLifxLanFilter();
+                let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light OFF command settings: ${JSON.stringify(runDetail)}`);
                 return await Lifx.turnOffFilter(runDetail);
             } else {
-                let runDetail: any = runCommand.convertToLifxLanFilter();
+                let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light COLOR command settings: ${JSON.stringify(runDetail)}`);
                 return await Lifx.setColorFilter(runDetail);
             }
@@ -250,5 +260,30 @@ export class LifxWrapper {
      */
     public getZoneDetail(name: string): Promise<any> {
         return this.getDevice(name).then(device => device.multiZoneGetColorZones({ start: 0, end: 16 }));
+    }
+
+    /** Make sure that there is a value for all colors and a valid transition duration. */
+    public validColorChange(runCommand: LifxCommand): boolean {
+        return [runCommand.Hue, runCommand.Saturation, runCommand.Brightness, runCommand.Kelvin].every(v => (!!v || v == 0) && v != -1);
+    }
+
+    /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
+    public convertToLifxLanFilter(runCommand: LifxCommand): any {
+        let details: any = {
+            // Fake LifxLanFilter based on light name (label) only
+            filters: runCommand.Lights.map(l => { return { label: l }; }),
+            duration: runCommand.Duration
+        };
+        // Determine if the settings had a valid color change in it.
+        if (this.validColorChange(runCommand)) {
+            details.color = { hue: runCommand.Hue, saturation: runCommand.Saturation, brightness: runCommand.Brightness, kelvin: runCommand.Kelvin };
+        }
+
+        return details;
+    }
+
+    /** Blank test functions */
+    public apiTest(): any {
+
     }
 }

@@ -100,32 +100,24 @@ export class LifxCommand {
     /** Delay after this command before the next */
     public Delay: number;
 
-    /** (Hue, Saturation, Brightness, Kelvin) */
-    public HsbColor: [number, number, number, number];
+    /** Valid CSS color names: http://w3schools.sinsixx.com/css/css_colornames.asp.htm */
+    public Color: string;
 
     /** Value between 0.0. and 1.0 */
-    public get Hue() {
-        return this.HsbColor[0];
-    }
+    public Hue: number;
 
     /** Value between 0.0 and 1.0 */
-    public get Saturation() {
-        return this.HsbColor[1];
-    }
+    public Saturation: number;
 
     /** Value between 0.0 and 1.0 */
-    public get Brightness() {
-        return this.HsbColor[2];
-    }
+    public Brightness: number;
 
     /** Value between 2500 and 9000 */
-    public get Kelvin() {
-        return this.HsbColor[3];
-    }
+    public  Kelvin: number;
 
     constructor() { }
 
-    public configure(data: any): LifxCommand {
+    public configure(data: any, colorManager: any): LifxCommand {
         if (!data) {
             throw SyntaxError('No data was present to parse!');
         }
@@ -137,17 +129,28 @@ export class LifxCommand {
         this.TurnOff = isbooleantrue(parsedData.TurnOff);
         this.Duration = +parsedData.Duration;
         this.Delay = +parsedData.Delay;
-        /** Added in later version (0.00.04), may not be available */
+
+        /** Added in later version (0.00.04+), may not be available */
         this.Zones = parsedData.Zones || [];
         this.Effect = parsedData.Effect || [];
         this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
 
-        if (parsedData.Hue || parsedData.Saturation || parsedData.Brightness || parsedData.Kelvin) {
-            this.HsbColor = [+parsedData.Hue, +parsedData.Saturation, +parsedData.Brightness, +parsedData.Kelvin];
-        } else if (!!parsedData.Color) {
-            this.HsbColor = parsedData.Color;
-        }
+        // Prefer HSB values instead of CSSColor. Brightness always a required argument if other colors are set.
+        this.Brightness = +parsedData.Brightness;
+        // Kelvin not required as it not used by the colors (only applicable during transitions to/from white).
+        this.Kelvin = +parsedData.Kelvin || 2500;
 
+        this.Hue = +parsedData.Hue || undefined;
+        this.Saturation = +parsedData.Saturation || undefined;
+
+        if (parsedData.Color && !this.Hue && !this.Saturation) {
+            let obj: any = colorManager.cssToHsb({ css: parsedData.Color });
+            this.Hue = obj.hsb.hue;
+            this.Saturation = obj.hsb.saturation;
+            // Brightness is ignored. 
+            // It affects the color but since it directly controls lumen leave it up to the required parameter and get the color close enough.
+        }
+        
         if (isNaN(this.Duration)) {
             throw SyntaxError('Duration is a required argument!');
         }
@@ -177,25 +180,5 @@ export class LifxCommand {
         }
 
         return this;
-    }
-
-    /** Make sure that there is a value for all colors and a valid transition duration. */
-    public validColorChange(): boolean {
-        return this.HsbColor && this.HsbColor.every(v => (!!v || v == 0) && v != -1);
-    }
-
-    /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
-    public convertToLifxLanFilter(): any {
-        let details: any = {
-            // Fake LifxLanFilter based on light name (label) only
-            filters: this.Lights.map(l => { return { label: l }; }),
-            duration: this.Duration
-        };
-        // Determine if the settings had a valid color change in it.
-        if (this.validColorChange()) {
-            details.color = { hue: this.Hue, saturation: this.Saturation, brightness: this.Brightness, kelvin: this.Kelvin }
-        }
-
-        return details;
     }
 }
