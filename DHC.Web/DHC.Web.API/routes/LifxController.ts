@@ -98,9 +98,8 @@ async function sequenceControl(req: Request, resp: Response) {
         let sequencePromise: Promise<void> = Promise.resolve();
         for (let repeatCount = 0; repeatCount < count; repeatCount++) {
             sequencePromise = sequencePromise.then(async () => {
-                await LightManager.sendSequence(sequence)
-                    .catch((err) => resp.status(500).json(err));
-                console.log(`Completed sequence repeat ${repeatCount}`)
+                await LightManager.sendSequence(sequence);
+                console.log(`Completed sequence repeat ${repeatCount}`);
             })
         }
 
