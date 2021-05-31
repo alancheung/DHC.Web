@@ -48,6 +48,9 @@
     <TypeScriptCompile Include="models\definitions\Lifx.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
+    <TypeScriptCompile Include="models\definitions\LifxCommand.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="models\enums.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
