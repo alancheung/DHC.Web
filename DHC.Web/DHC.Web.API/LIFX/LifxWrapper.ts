@@ -1,5 +1,4 @@
-import { LightInfo, LightState } from '../../DHC.Web.Common/models/definitions/Lifx';
-import { LifxCommand } from '../../DHC.Web.Common/models/definitions/LifxCommand';
+import { LightInfo, LifxCommand, LightState } from '../../DHC.Web.Common/models/models';
 
 import Lifx = require('node-lifx-lan');
 import ColorManager = require('../node_modules/node-lifx-lan/lib/lifx-lan-color');
