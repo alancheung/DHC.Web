@@ -1,4 +1,4 @@
-import { LightInfo, BaseLifxCommand, LightState } from '../../DHC.Web.Common/models/models';
+import { LightInfo, BaseLifxCommand, LightState, LifxCommandType, ZoneEffectLifxCommand, ZoneColorLifxCommand, ColorLifxCommand, ZONE_APPLY } from '../../DHC.Web.Common/models/models';
 
 import Lifx = require('node-lifx-lan');
 import ColorManager = require('../node_modules/node-lifx-lan/lib/lifx-lan-color');
@@ -144,51 +144,58 @@ export class LifxWrapper {
         let runCommand: BaseLifxCommand = settings[cmdCount];
 
         return await discover.then(async () => {
-            if (runCommand.Effect.length > 0) {
-                console.log(`Zone effect parsed for '${runCommand.Lights}' - ${JSON.stringify(runCommand)}!`);
+            if (runCommand.LifxCommandType === LifxCommandType.MULTI_EFFECT) {
+                let zoneEffectCommand: ZoneEffectLifxCommand = runCommand as ZoneEffectLifxCommand;
+                console.log(`Zone effect parsed for '${zoneEffectCommand.Lights}' - ${JSON.stringify(zoneEffectCommand)}!`);
 
                 // Validated to be only one device if effects are specified.
-                let stripLight: any = await this.getDevice(runCommand.Lights[0]);
+                let stripLight: any = await this.getDevice(zoneEffectCommand.Lights[0]);
                 let zoneEffect: any = {
-                    type: runCommand.Effect[0],
+                    type: zoneEffectCommand.EffectType,
                     // Weird but it is the time in animations.
-                    speed: runCommand.Delay,
+                    speed: zoneEffectCommand.Speed,
                     // Time for entire animation; 0 for infinite
-                    duration: runCommand.Duration,
-                    direction: runCommand.Effect[1]
+                    duration: zoneEffectCommand.Duration,
+                    direction: zoneEffectCommand.Direction
                 };
                 return await stripLight.multiZoneSetEffect(zoneEffect);
-            } else if (runCommand.Zones.length > 0) {
-                console.log(`Zone command parsed for '${runCommand.Lights}' - ${JSON.stringify(runCommand)}!`);
-                // Validated to be only one device if Zones are specified.
-                let stripLight: any = await this.getDevice(runCommand.Lights[0]);
+            } else if (runCommand.LifxCommandType === LifxCommandType.MULTI_COLOR) {
+                let zoneCommand: ZoneColorLifxCommand = runCommand as ZoneColorLifxCommand;
+                console.log(`Zone command parsed for '${zoneCommand.Lights}' - ${JSON.stringify(zoneCommand)}!`);
 
-                let zoneCommand: any = {
-                    start    : runCommand.Zones[0],
-                    end      : runCommand.Zones[0] + runCommand.Zones[1],
-                    color    : {
-                        hue        : runCommand.Hue,
-                        saturation : runCommand.Saturation,
-                        brightness : runCommand.Brightness,
-                        kelvin     : runCommand.Kelvin
+                // Validated to be only one device if Zones are specified.
+                let stripLight: any = await this.getDevice(zoneCommand.Lights[0]);
+                let zoneColor: any = {
+                    start: zoneCommand.Zones[0],
+                    end: zoneCommand.Zones[0] + zoneCommand.Zones[1],
+                    color: {
+                        hue: zoneCommand.Hue,
+                        saturation: zoneCommand.Saturation,
+                        brightness: zoneCommand.Brightness,
+                        kelvin: zoneCommand.Kelvin
                     },
-                    duration : runCommand.Duration,
-                    // Apply if it is the last command in the sequence or we are immediately applying commands.
-                    apply    : (cmdCount === settings.length - 1 || runCommand.ApplyZoneImmediately) ? 1 : 0, 
+                    duration: zoneCommand.Duration,
+                    apply: zoneCommand.ApplyZoneImmediately ? ZONE_APPLY.APPLY : ZONE_APPLY.NO_APPLY,
                 };
-                return await stripLight.multiZoneSetColorZones(zoneCommand);
-            } else if (runCommand.TurnOn) {
+                return await stripLight.multiZoneSetColorZones(zoneColor);
+            } else if (runCommand.LifxCommandType === LifxCommandType.ON) {
                 let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light ON command settings: ${JSON.stringify(runDetail)}`);
                 return await Lifx.turnOnFilter(runDetail);
-            } else if (runCommand.TurnOff) {
+            } else if (runCommand.LifxCommandType === LifxCommandType.OFF) {
                 let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light OFF command settings: ${JSON.stringify(runDetail)}`);
                 return await Lifx.turnOffFilter(runDetail);
-            } else {
+            } else if (runCommand.LifxCommandType === LifxCommandType.COLOR) {
                 let runDetail: any = this.convertToLifxLanFilter(runCommand);
                 console.log(`Parsed library light COLOR command settings: ${JSON.stringify(runDetail)}`);
-                return await Lifx.setColorFilter(runDetail);
+
+                let colorCommand: ColorLifxCommand = runCommand as ColorLifxCommand;
+                if (colorCommand.TurnOn) {
+                    return await Lifx.turnOnFilter(runDetail);
+                } else {
+                    return await Lifx.setColorFilter(runDetail);
+                }
             }
         }).then(() => {
             console.log(`Command ${cmdCount} sent`);
@@ -263,11 +270,6 @@ export class LifxWrapper {
         return this.getDevice(name).then(device => device.multiZoneGetColorZones({ start: 0, end: 16 }));
     }
 
-    /** Make sure that there is a value for all colors and a valid transition duration. */
-    public validColorChange(runCommand: BaseLifxCommand): boolean {
-        return [runCommand.Hue, runCommand.Saturation, runCommand.Brightness, runCommand.Kelvin].every(v => (!!v || v == 0) && v != -1);
-    }
-
     /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
     public convertToLifxLanFilter(runCommand: BaseLifxCommand): any {
         let details: any = {
@@ -276,8 +278,9 @@ export class LifxWrapper {
             duration: runCommand.Duration
         };
         // Determine if the settings had a valid color change in it.
-        if (this.validColorChange(runCommand)) {
-            details.color = { hue: runCommand.Hue, saturation: runCommand.Saturation, brightness: runCommand.Brightness, kelvin: runCommand.Kelvin };
+        if (runCommand.LifxCommandType === LifxCommandType.COLOR) {
+            let colorCommand: ColorLifxCommand = runCommand as ColorLifxCommand;
+            details.color = { hue: colorCommand.Hue, saturation: colorCommand.Saturation, brightness: colorCommand.Brightness, kelvin: colorCommand.Kelvin };
         }
 
         return details;

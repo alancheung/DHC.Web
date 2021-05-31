@@ -1,7 +1,8 @@
 import express = require('express');
 import { Request, Response } from 'express';
 import { LifxWrapper } from '../LIFX/LifxWrapper';
-import { BaseLifxCommand } from '../../DHC.Web.Common/models/models';
+import { BaseLifxCommand, ColorLifxCommand, LifxCommandType, OffLifxCommand, OnLifxCommand, ZoneColorLifxCommand, ZoneEffectLifxCommand } from '../../DHC.Web.Common/models/models';
+import { ArgumentError, ArgumentOutOfRangeError } from '../../DHC.Web.Common/models/definitions/Errors';
 
 const LightManager: LifxWrapper = new LifxWrapper();
 
@@ -29,7 +30,7 @@ lifxRouter.post('/test', apiTest);
 async function getLightDetails(req: Request, resp: Response) {
     await LightManager.getDetail(req.params.name)
         .then((detail) => resp.status(200).json(detail))
-        .catch((err) => resp.status(500).json(err));
+        .catch((err) => resp.status(500).json(err.message));
 }
 
 /**
@@ -41,7 +42,7 @@ async function getLightDetails(req: Request, resp: Response) {
 async function getZoneDetails(req: Request, resp: Response) {
     await LightManager.getZoneDetail(req.params.name)
         .then((detail) => resp.status(200).json(detail))
-        .catch((err) => resp.status(500).json(err));
+        .catch((err) => resp.status(500).json(err.message));
 }
 
 /**
@@ -63,7 +64,7 @@ function getDiscoveredLights(req: Request, resp: Response) {
 async function runDiscovery(req: Request, resp: Response) {
     await LightManager.runDiscovery(false)
         .then((lights) => resp.status(200).json(lights))
-        .catch((err) => resp.status(500).json(err));
+        .catch((err) => resp.status(500).json(err.message));
 }
 
 /**
@@ -74,12 +75,12 @@ async function runDiscovery(req: Request, resp: Response) {
  */
 async function controlLight(req: Request, resp: Response) {
     try {
-        let settings: BaseLifxCommand = new BaseLifxCommand().configure(req.body, LightManager.ColorManager);
-        return await LightManager.sendCommand(settings)
+        let command: BaseLifxCommand = createLifxCommand(req.body, LightManager.ColorManager);
+        return await LightManager.sendCommand(command)
             .then(() => resp.status(200).send('OK'))
-            .catch((err) => resp.status(500).json(err));
+            .catch((err) => resp.status(500).json(err.message));
     } catch (err) {
-        resp.status(500).json(err);
+        resp.status(500).json(err.message);
     }
 }
 
@@ -93,7 +94,7 @@ async function sequenceControl(req: Request, resp: Response) {
     try {
         let count: number = +req.body.Count;
         let commands: any[] = req.body.Sequence;
-        let sequence: BaseLifxCommand[] = commands.map(c => new BaseLifxCommand().configure(c, LightManager.ColorManager));
+        let sequence: BaseLifxCommand[] = commands.map(c => createLifxCommand(c, LightManager.ColorManager));
 
         let sequencePromise: Promise<void> = Promise.resolve();
         for (let repeatCount = 0; repeatCount < count; repeatCount++) {
@@ -105,9 +106,9 @@ async function sequenceControl(req: Request, resp: Response) {
 
         return await sequencePromise
             .then(() => resp.status(200).send('OK'))
-            .catch((err) => resp.status(500).json(err));
+            .catch((err) => resp.status(500).json(err.message));
     } catch (err) {
-        resp.status(500).json(err);
+        resp.status(500).json(err.message);
     }
 }
 
@@ -119,14 +120,43 @@ async function sequenceControl(req: Request, resp: Response) {
  */
 async function apiTest(req: Request, resp: Response) {
     try {
-        let settings: BaseLifxCommand = new BaseLifxCommand().configure(req.body, LightManager.ColorManager);
+        let command: BaseLifxCommand = createLifxCommand(req.body, LightManager.ColorManager);
 
         let colorGuy: any = LightManager.ColorManager;
-        let rgb = colorGuy.hsbToRgb({ hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin })
+
+        // Grimy but allows casting down using as.
+        let colorCommand: ColorLifxCommand = command as ColorLifxCommand;
+        let rgb = colorGuy.hsbToRgb({ hue: colorCommand.Hue, saturation: colorCommand.Saturation, brightness: colorCommand.Brightness, kelvin: colorCommand.Kelvin })
 
         resp.status(200).json(rgb);
     } catch (err) {
-        resp.status(500).json(err);
+        resp.status(500).json(err.message);
+    }
+}
+
+/**
+ * Map the LifxCommandType enum to an object capable of handling the command type.
+ * @param body Request body to parse.
+ * @param colorManager lifx-lan-color object.
+ */
+function createLifxCommand(body: any, colorManager): BaseLifxCommand {
+    // Get the base object and have it tell us the type.
+    let baseCommand: BaseLifxCommand = new BaseLifxCommand(body);
+
+    switch (baseCommand.LifxCommandType)
+    {
+        case LifxCommandType.ON:
+            return new OnLifxCommand(body);
+        case LifxCommandType.OFF:
+            return new OffLifxCommand(body);
+        case LifxCommandType.COLOR:
+            return new ColorLifxCommand(body, colorManager);
+        case LifxCommandType.MULTI_COLOR:
+            return new ZoneColorLifxCommand(body, colorManager);
+        case LifxCommandType.MULTI_EFFECT:
+            return new ZoneEffectLifxCommand(body);
+        default:
+            throw new ArgumentError('LifxCommandType could not be parsed!');
     }
 }
 

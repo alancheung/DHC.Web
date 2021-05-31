@@ -62,31 +62,31 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
   }
 
   public updateColor() {
-    if (!this.focusOn) return;
+    //if (!this.focusOn) return;
 
-    let command: BaseLifxCommand = new BaseLifxCommand();
-    command.Lights = [this.focusOn.LightName];
-    command.Hue = this.hsb[0] / 1000;
-    command.Saturation = this.hsb[1] / 100;
-    command.Brightness = this.hsb[2] / 100;
-    command.Kelvin = this.focusOn.State.Color.Kelvin;
-    command.Duration = 1000;
-    this.sendAndClearFocus(command);
+    //let command: BaseLifxCommand = new BaseLifxCommand();
+    //command.Lights = [this.focusOn.LightName];
+    //command.Hue = this.hsb[0] / 1000;
+    //command.Saturation = this.hsb[1] / 100;
+    //command.Brightness = this.hsb[2] / 100;
+    //command.Kelvin = this.focusOn.State.Color.Kelvin;
+    //command.Duration = 1000;
+    //this.sendAndClearFocus(command);
   }
 
   public setPower() {
-    if (!this.focusOn) return;
+    //if (!this.focusOn) return;
 
-    let command: BaseLifxCommand = new BaseLifxCommand();
-    command.Lights = [this.focusOn.LightName];
-    command.Duration = 1000;
+    //let command: BaseLifxCommand = new BaseLifxCommand();
+    //command.Lights = [this.focusOn.LightName];
+    //command.Duration = 1000;
 
-    if (this.focusOn.State.Power) {
-      command.TurnOff = true;
-    } else {
-      command.TurnOn = true;
-    }
-    this.sendAndClearFocus(command);
+    //if (this.focusOn.State.Power) {
+    //  command.TurnOff = true;
+    //} else {
+    //  command.TurnOn = true;
+    //}
+    //this.sendAndClearFocus(command);
   }
 
   /** Send the command to the API, but then clear the light from focus.

@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from "util";
 import { isbooleantrue } from "../../functions";
 import { ArgumentError, ArgumentMissingError, ArgumentOutOfRangeError } from "./Errors";
 import { ZONE_EFFECT_MOVE_DIRECTION, ZONE_EFFECT_TYPE } from "./Lifx";
@@ -43,14 +42,14 @@ export class BaseLifxCommand {
         let parsedData = JSON.parse(JSON.stringify(obj));
 
         // Always parse the command type to be an int, but 0 is valid enum so check against null/undefined instead of falsey.
-        if (!isNullOrUndefined(parsedData.CommandType)) {
+        if (parsedData.LifxCommandType != null) {
             this.LifxCommandType = isNaN(parsedData.CommandType)
-                // If the CommandType is a string, referencing the enum should give back a number.
-                ? +LifxCommandType[parsedData.CommandType]
+                // If the LifxCommandType is a string, referencing the enum should give back a number.
+                ? +LifxCommandType[parsedData.LifxCommandType]
                 // Otherwise, it's already a number so save that off.
-                : +parsedData.CommandType;
+                : +parsedData.LifxCommandType;
         } else {
-            throw new ArgumentMissingError(BaseLifxCommand.name, 'CommandType');
+            throw new ArgumentMissingError(BaseLifxCommand.name, 'LifxCommandType');
         }
 
         // Must have at least one light to command.
@@ -69,6 +68,9 @@ export class BaseLifxCommand {
 
 /** Secondary command containing logic and fields to changing a light's color. */
 export class ColorLifxCommand extends BaseLifxCommand {
+
+    /** Should the light be turned on as part of this command? */
+    public TurnOn: boolean;
 
     /** Valid CSS color names: http://w3schools.sinsixx.com/css/css_colornames.asp.htm */
     public Color: string;
@@ -96,9 +98,20 @@ export class ColorLifxCommand extends BaseLifxCommand {
         // JSON convert to handle arrays and stuff correctly.
         let parsedData = JSON.parse(JSON.stringify(obj));
 
+        // Due to how the filter works, it's easier to represent an ON to a certain color command as a regular COLOR.
+        // LifxWrapper determines the correct method to call based on this flag.
+        this.TurnOn = isbooleantrue(parsedData.TurnOn);
+
         // Prefer HSB values instead of CSSColor. Brightness always a required argument if other colors are set.
-        this.Brightness = +parsedData.Brightness || 1.0;
+        // 0.0 brightness is valid so only set to 1.0 if it was null or undefined
+        if (parsedData.Brightness != null) {
+            this.Brightness = +parsedData.Brightness
+        } else {
+            this.Brightness = 1.0;
+        }
+
         // Kelvin not required as it not used by the colors (only applicable during transitions to/from white).
+        // Minimum Kelvin value is 1500 (not 0!)
         this.Kelvin = +parsedData.Kelvin || 3500;
 
         if (parsedData.Color) {
@@ -112,14 +125,14 @@ export class ColorLifxCommand extends BaseLifxCommand {
             // cssToHsb brightness is ignored. 
             // It affects the color but since it directly controls lumen leave it up to the required parameter and get the color close enough.
         } else {
-            if (!isNullOrUndefined(parsedData.Hue)) {
+            if (parsedData.Hue != null!) {
                 this.Hue = +parsedData.Hue;
             } else {
                 // If the Color is not set AND the Hue is missing, then throw an exception
                 throw new ArgumentMissingError(ColorLifxCommand.name, 'Hue');
             }
 
-            if (!isNullOrUndefined(parsedData.Saturation)) {
+            if (parsedData.Saturation != null) {
                 this.Saturation = +parsedData.Saturation;
             } else {
                 // If the Color is not set AND the Saturation is missing, then throw an exception
@@ -129,17 +142,17 @@ export class ColorLifxCommand extends BaseLifxCommand {
     }
 }
 
-/** High-level command containing logic and fields to turn a light ON. */
-export class OnLifxCommand extends ColorLifxCommand {
-    constructor(obj: any, colorManager: any) {
-        super(obj, colorManager);
+/** High-level command containing logic and fields to turn a light ON */
+export class OnLifxCommand extends BaseLifxCommand {
+    constructor(obj: any) {
+        super(obj);
     }
 }
 
 /** High-level command containing logic and fields to turn a light OFF. */
-export class OffLifxCommand extends ColorLifxCommand {
-    constructor(obj: any, colorManager: any) {
-        super(obj, colorManager);
+export class OffLifxCommand extends BaseLifxCommand {
+    constructor(obj: any) {
+        super(obj);
     }
 }
 
@@ -158,10 +171,11 @@ export class ZoneColorLifxCommand extends ColorLifxCommand {
         let parsedData = JSON.parse(JSON.stringify(obj));
 
         // Require Zones if CommandType.MULTI_COLOR. If caller wanted to affect all zones, then use COLOR.
-        if (isNullOrUndefined(parsedData.Zones)) {
+        if (parsedData.Zones != null) {
+            this.Zones = parsedData.Zones;
+        } else {
             throw new ArgumentMissingError(ZoneColorLifxCommand.name, 'Zones');
         }
-        this.Zones = parsedData.Zones;
         if (this.Zones.length !== 2) {
             throw new ArgumentError('A zone definition must define exactly a pair of [startingZone, numberOfZones] arguments!');
         }
@@ -169,10 +183,11 @@ export class ZoneColorLifxCommand extends ColorLifxCommand {
             throw new ArgumentError('Cannot set zone command for more than one light!');
         }
 
-        if (isNullOrUndefined(parsedData.ApplyZoneImmediately)) {
+        if (parsedData.ApplyZoneImmediately != null) {
+            this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
+        } else {
             throw new ArgumentMissingError(ZoneColorLifxCommand.name, 'ApplyZoneImmediately');
         }
-        this.ApplyZoneImmediately = isbooleantrue(parsedData.ApplyZoneImmediately);
     }
 }
 
@@ -194,31 +209,30 @@ export class ZoneEffectLifxCommand extends BaseLifxCommand {
         let parsedData = JSON.parse(JSON.stringify(obj));
 
         // Always parse the enums to be an int, but 0 is valid enum so check against null/undefined instead of falsey.
-        if (!isNullOrUndefined(parsedData.EffectType)) {
+        if (parsedData.EffectType != null) {
             this.EffectType = isNaN(parsedData.EffectType)
                 // If the value is a string, referencing the enum should give back a number.
                 ? +ZONE_EFFECT_TYPE[parsedData.EffectType]
                 // Otherwise, it's already a number so save that off.
                 : +parsedData.EffectType;
         } else {
-            throw new ArgumentMissingError(BaseLifxCommand.name, 'EffectType');
+            throw new ArgumentMissingError(ZoneEffectLifxCommand.name, 'EffectType');
         }
 
         // Always parse the enums to be an int, but 0 is valid enum so check against null/undefined instead of falsey.
-        if (!isNullOrUndefined(parsedData.Direction)) {
+        if (parsedData.Direction != null) {
             this.Direction = isNaN(parsedData.Direction)
                 // If the value is a string, referencing the enum should give back a number.
                 ? +ZONE_EFFECT_MOVE_DIRECTION[parsedData.Direction]
                 // Otherwise, it's already a number so save that off.
                 : +parsedData.Direction;
         } else {
-            throw new ArgumentMissingError(BaseLifxCommand.name, 'Direction');
+            this.Direction = ZONE_EFFECT_MOVE_DIRECTION.TOWARDS;
         }
 
-        if (!isNullOrUndefined(parsedData.Speed)) {
+        if (parsedData.Speed != null) {
             this.Speed = +parsedData.Speed;
         } else {
-            // If the Color is not set AND the Saturation is missing, then throw an exception
             throw new ArgumentMissingError(ColorLifxCommand.name, 'Speed');
         }
     }
