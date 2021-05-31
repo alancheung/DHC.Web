@@ -23,7 +23,7 @@ export class SequenceCommand {
 /** Base level command containing required fields for all commands. */
 export class BaseLifxCommand {
     /** The type of command that this base object represents (can be casted to an object of this LifxCommandType) */
-    public CommandType: LifxCommandType;
+    public LifxCommandType: LifxCommandType;
 
     /** Array of light names */
     public Lights: string[];
@@ -44,7 +44,7 @@ export class BaseLifxCommand {
 
         // Always parse the command type to be an int, but 0 is valid enum so check against null/undefined instead of falsey.
         if (!isNullOrUndefined(parsedData.CommandType)) {
-            this.CommandType = isNaN(parsedData.CommandType)
+            this.LifxCommandType = isNaN(parsedData.CommandType)
                 // If the CommandType is a string, referencing the enum should give back a number.
                 ? +LifxCommandType[parsedData.CommandType]
                 // Otherwise, it's already a number so save that off.
