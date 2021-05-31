@@ -6,12 +6,12 @@ export class ArgumentError extends Error {
 
 export class ArgumentMissingError extends ArgumentError {
     constructor(objName: string, argName: string) {
-        super(`Missing ${objName} argument: ${argName}!`);
+        super(`Missing ${objName} argument: '${argName}'!`);
     }
 }
 
 export class ArgumentOutOfRangeError extends ArgumentError {
     constructor(objName: string, argName: string) {
-        super(`Out of range ${objName} argument: ${argName}!`);
+        super(`Out of range ${objName} argument: '${argName}'!`);
     }
 }
