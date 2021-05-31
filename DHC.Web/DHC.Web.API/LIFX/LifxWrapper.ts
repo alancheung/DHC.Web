@@ -1,4 +1,4 @@
-import { LightInfo, LifxCommand, LightState } from '../../DHC.Web.Common/models/models';
+import { LightInfo, BaseLifxCommand, LightState } from '../../DHC.Web.Common/models/models';
 
 import Lifx = require('node-lifx-lan');
 import ColorManager = require('../node_modules/node-lifx-lan/lib/lifx-lan-color');
@@ -56,7 +56,7 @@ export class LifxWrapper {
      * Update the lights to the values described in settings
      * @param command 
      */
-    public async sendCommand(command: LifxCommand): Promise<void> {
+    public async sendCommand(command: BaseLifxCommand): Promise<void> {
 
         // Attempt commands with delay!
         let rejectChain: Promise<void> = Promise.reject();
@@ -79,7 +79,7 @@ export class LifxWrapper {
      * Update the lights to the values described in settings
      * @param sequence The sequence of commands to send
      */
-    public async sendSequence(sequence: LifxCommand[]): Promise<void> {
+    public async sendSequence(sequence: BaseLifxCommand[]): Promise<void> {
         // Get the list of involved lights for all lights in the sequence to ensure that all lights have been discovered before 
         // running the commands. Prevents sending a sequence commands and then having to break to discover.
         let allInvolvedLights: any = this.getInvolvedLights(sequence);
@@ -130,7 +130,7 @@ export class LifxWrapper {
      * @param details Settings parameter converted to node-lifx-lan readable obj format.
      * @param cmdCount The index of the commmand currently being handled.
      */
-    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: LifxCommand[], cmdCount: number): Promise<void> {
+    private async handle(forceDiscovery: boolean, involvedLights: string[], settings: BaseLifxCommand[], cmdCount: number): Promise<void> {
         // Determine if this method should attempt a discovery before invoking the commands.
         let discover: Promise<void>;
         if (forceDiscovery || !this.lightsDiscovered(involvedLights)) {
@@ -141,7 +141,7 @@ export class LifxWrapper {
         }
 
         // Get the single command
-        let runCommand: LifxCommand = settings[cmdCount];
+        let runCommand: BaseLifxCommand = settings[cmdCount];
 
         return await discover.then(async () => {
             if (runCommand.Effect.length > 0) {
@@ -228,7 +228,7 @@ export class LifxWrapper {
      * Prevents running discover in the middle of a sequence. Pre-run discover if not all known
      * @param sequence Sequence of commands upcoming.
      */
-    public getInvolvedLights(sequence: LifxCommand[]): string[] {
+    public getInvolvedLights(sequence: BaseLifxCommand[]): string[] {
         let lightNames: string[] = [].concat.apply([], sequence.map(cmd => cmd.Lights));
         return lightNames;
     }
@@ -264,12 +264,12 @@ export class LifxWrapper {
     }
 
     /** Make sure that there is a value for all colors and a valid transition duration. */
-    public validColorChange(runCommand: LifxCommand): boolean {
+    public validColorChange(runCommand: BaseLifxCommand): boolean {
         return [runCommand.Hue, runCommand.Saturation, runCommand.Brightness, runCommand.Kelvin].every(v => (!!v || v == 0) && v != -1);
     }
 
     /** Convert the parsed LifxCommand object into a node-lifx-lan.LifxLanFilter */
-    public convertToLifxLanFilter(runCommand: LifxCommand): any {
+    public convertToLifxLanFilter(runCommand: BaseLifxCommand): any {
         let details: any = {
             // Fake LifxLanFilter based on light name (label) only
             filters: runCommand.Lights.map(l => { return { label: l }; }),

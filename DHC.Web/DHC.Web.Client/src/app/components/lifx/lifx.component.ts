@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InformationLoaderComponent } from '../information-loader';
 import { LifxApiService } from '../../services/lifx-api.service';
-import { LightInfo, LightState, LifxCommand } from '../../../../../DHC.Web.Common/models/models';
+import { LightInfo, LightState, BaseLifxCommand } from '../../../../../DHC.Web.Common/models/models';
 
 import * as colorConverter from 'color-convert';
 
@@ -64,7 +64,7 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
   public updateColor() {
     if (!this.focusOn) return;
 
-    let command: LifxCommand = new LifxCommand();
+    let command: BaseLifxCommand = new BaseLifxCommand();
     command.Lights = [this.focusOn.LightName];
     command.Hue = this.hsb[0] / 1000;
     command.Saturation = this.hsb[1] / 100;
@@ -77,7 +77,7 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
   public setPower() {
     if (!this.focusOn) return;
 
-    let command: LifxCommand = new LifxCommand();
+    let command: BaseLifxCommand = new BaseLifxCommand();
     command.Lights = [this.focusOn.LightName];
     command.Duration = 1000;
 
@@ -91,7 +91,7 @@ export class LifxComponent extends InformationLoaderComponent implements OnInit 
 
   /** Send the command to the API, but then clear the light from focus.
    * Quick workaround for not getting correct state until command finishes */
-  private sendAndClearFocus(command: LifxCommand) {
+  private sendAndClearFocus(command: BaseLifxCommand) {
     this.api.sendCommand(command).subscribe(() => this.focusOn = undefined, err => console.log(err));
   }
 }

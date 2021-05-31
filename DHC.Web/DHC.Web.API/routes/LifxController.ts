@@ -1,7 +1,7 @@
 import express = require('express');
 import { Request, Response } from 'express';
 import { LifxWrapper } from '../LIFX/LifxWrapper';
-import { LifxCommand } from '../../DHC.Web.Common/models/models';
+import { BaseLifxCommand } from '../../DHC.Web.Common/models/models';
 
 const LightManager: LifxWrapper = new LifxWrapper();
 
@@ -74,7 +74,7 @@ async function runDiscovery(req: Request, resp: Response) {
  */
 async function controlLight(req: Request, resp: Response) {
     try {
-        let settings: LifxCommand = new LifxCommand().configure(req.body, LightManager.ColorManager);
+        let settings: BaseLifxCommand = new BaseLifxCommand().configure(req.body, LightManager.ColorManager);
         return await LightManager.sendCommand(settings)
             .then(() => resp.status(200).send('OK'))
             .catch((err) => resp.status(500).json(err));
@@ -93,7 +93,7 @@ async function sequenceControl(req: Request, resp: Response) {
     try {
         let count: number = +req.body.Count;
         let commands: any[] = req.body.Sequence;
-        let sequence: LifxCommand[] = commands.map(c => new LifxCommand().configure(c, LightManager.ColorManager));
+        let sequence: BaseLifxCommand[] = commands.map(c => new BaseLifxCommand().configure(c, LightManager.ColorManager));
 
         let sequencePromise: Promise<void> = Promise.resolve();
         for (let repeatCount = 0; repeatCount < count; repeatCount++) {
@@ -119,7 +119,7 @@ async function sequenceControl(req: Request, resp: Response) {
  */
 async function apiTest(req: Request, resp: Response) {
     try {
-        let settings: LifxCommand = new LifxCommand().configure(req.body, LightManager.ColorManager);
+        let settings: BaseLifxCommand = new BaseLifxCommand().configure(req.body, LightManager.ColorManager);
 
         let colorGuy: any = LightManager.ColorManager;
         let rgb = colorGuy.hsbToRgb({ hue: settings.Hue, saturation: settings.Saturation, brightness: settings.Brightness, kelvin: settings.Kelvin })

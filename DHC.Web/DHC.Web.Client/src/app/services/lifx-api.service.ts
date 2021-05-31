@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DhcApiService } from './dhc-api.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LightInfo, LifxCommand, LightState } from '../../../../DHC.Web.Common/models/models';
+import { LightInfo, BaseLifxCommand, LightState } from '../../../../DHC.Web.Common/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class LifxApiService extends DhcApiService {
     this._discoverEndpoint = this._apiRoot + '/api/lifx/discover';
   }
 
-  public sendCommand(command: LifxCommand): Observable<any> {
+  public sendCommand(command: BaseLifxCommand): Observable<any> {
     return this._http.post<any>(this._serviceAddress, command);
   }
 

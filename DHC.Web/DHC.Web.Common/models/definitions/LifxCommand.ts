@@ -5,10 +5,10 @@ export class SequenceCommand {
     public Count: number;
 
     /** The command sequence */
-    public Sequence: LifxCommand[];
+    public Sequence: BaseLifxCommand[];
 }
 
-export class LifxCommand {
+export class BaseLifxCommand {
     /** Array of light names */
     public Lights: string[];
 
@@ -50,7 +50,7 @@ export class LifxCommand {
 
     constructor() { }
 
-    public configure(data: any, colorManager: any): LifxCommand {
+    public configure(data: any, colorManager: any): BaseLifxCommand {
         if (!data) {
             throw SyntaxError('No data was present to parse!');
         }
@@ -117,18 +117,18 @@ export class LifxCommand {
     }
 }
 
-export class ZoneEffectLifxCommand extends LifxCommand {
+export class ZoneEffectLifxCommand extends BaseLifxCommand {
 
 }
 
-export class OnLifxCommand extends LifxCommand {
+export class OnLifxCommand extends BaseLifxCommand {
 
 }
 
-export class OffLifxCommand extends LifxCommand {
+export class OffLifxCommand extends BaseLifxCommand {
 
 }
 
-export class ZoneColorLifxCommand extends LifxCommand {
+export class ZoneColorLifxCommand extends BaseLifxCommand {
 
 }
