@@ -51,7 +51,7 @@
     "core-util-is": "^1.0.2",
     "css-color-names": "^1.0.1",
     "css-select-base-adapter": "^0.1.1",
-    "css-what": "^3.2.1",
+    "css-what": "^5.0.1",
     "cssesc": "^3.0.0",
     "cssnano-util-get-arguments": "^4.0.0",
     "cssnano-util-get-match": "^4.0.0",
